@@ -44,6 +44,10 @@ group :development, :test do
   gem 'pry'
   gem 'rspec-rails'
   gem 'simplecov'
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'activerecord-postgres_enum'
+
 end
 
 group :development do

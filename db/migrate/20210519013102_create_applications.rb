@@ -1,8 +1,7 @@
 class CreateApplications < ActiveRecord::Migration[5.2]
+
   def up
-    execute <<-SQL
-      CREATE TYPE application_status AS ENUM ('in_progress', 'pending', 'accepted', 'rejected');
-    SQL
+    create_enum :application_status, %w(in_progress pending accepted rejected)
     create_table :applications do |t|
       t.string :name
       t.string :street
@@ -10,17 +9,15 @@ class CreateApplications < ActiveRecord::Migration[5.2]
       t.string :state
       t.string :zip_code
       t.text :desc
+      t.references :pets, foreign_key: true
+      t.enum :status, enum_name: :application_status, default: 'in_progress', null: false
+
+      t.timestamps
     end
-
-    add_column :applications, :status, :application_status
-
   end
 
   def down
-    remove_column :applications, :status, :application_status
     drop_table :applications
-    execute <<-SQL
-      DROP TYPE application_status;
-    SQL
+    drop_enum :application_status
   end
 end
