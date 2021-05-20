@@ -36,6 +36,9 @@ gem 'jbuilder', '~> 2.5'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
+gem 'foundation-rails'
+gem 'autoprefixer-rails'
+
 group :development, :test do
   gem 'capybara'
   gem 'shoulda-matchers'
@@ -47,8 +50,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'activerecord-postgres_enum'
-  gem 'foundation-rails'
-  gem 'autoprefixer-rails'
+
 
 end
 
