@@ -29,11 +29,9 @@ ActiveRecord::Schema.define(version: 2021_05_20_163135) do
     t.string "state"
     t.string "zip_code"
     t.text "desc"
-    t.bigint "pets_id"
     t.enum "status", default: "in_progress", null: false, enum_name: "application_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["pets_id"], name: "index_applications_on_pets_id"
   end
 
   create_table "pets", force: :cascade do |t|
@@ -74,7 +72,6 @@ ActiveRecord::Schema.define(version: 2021_05_20_163135) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "applications", "pets", column: "pets_id"
   add_foreign_key "pets", "shelters"
   add_foreign_key "veterinarians", "veterinary_offices"
 end
