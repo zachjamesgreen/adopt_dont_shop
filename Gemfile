@@ -38,6 +38,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'foundation-rails'
 gem 'autoprefixer-rails'
+gem 'activerecord-postgres_enum'
 
 group :development, :test do
   gem 'capybara'
@@ -49,7 +50,7 @@ group :development, :test do
   gem 'simplecov'
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'activerecord-postgres_enum'
+
 
 
 end
