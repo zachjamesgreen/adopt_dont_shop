@@ -9,6 +9,7 @@ class CreateApplications < ActiveRecord::Migration[5.2]
       t.string :state
       t.string :zip_code
       t.text :desc
+      t.references :pet, foreign_key: true
       t.enum :status, enum_name: :application_status, default: 'in_progress', null: false
 
       t.timestamps
