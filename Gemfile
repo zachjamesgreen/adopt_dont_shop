@@ -47,6 +47,8 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'activerecord-postgres_enum'
+  gem 'foundation-rails'
+  gem 'autoprefixer-rails'
 
 end
 
