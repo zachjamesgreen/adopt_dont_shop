@@ -1,0 +1,19 @@
+<div class="columns small-10">
+  <%= form_with model: @application do |f| %>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+    <%= f.label :street %>
+    <%= f.text_field :street %>
+    <%= f.label :city %>
+    <%= f.text_field :city %>
+    <%= f.label :state %>
+    <%= f.text_field :state %>
+    <%= f.label :zip_code, 'Zip Code' %>
+    <%= f.text_field :zip_code %>
+    <%= f.label :desc, 'Why is your home good for this pet?'%>
+    <%= f.text_area :desc %>
+    <%= f.label :status %>
+    <%= f.select :status, get_statuses %>
+    <%= f.submit %>
+  <% end %>
+</div>

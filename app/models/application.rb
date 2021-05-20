@@ -6,7 +6,7 @@ class Application < ApplicationRecord
   validates :zip_code, presence: true
   validates :desc, presence: true
   # validates :status, presence: true
-  belongs_to :pet
+  belongs_to :pet, optional: true
 
-  enum status: %w(in_progress pending accepted rejected)
+  enum status: {in_progress: 'in_progress', pending: 'pending', accepted: 'accepted', rejected: 'rejected'}
 end
