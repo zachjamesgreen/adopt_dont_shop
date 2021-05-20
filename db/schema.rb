@@ -10,10 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_13_001717) do
+ActiveRecord::Schema.define(version: 2021_05_20_163135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_enum :application_status, [
+    "in_progress",
+    "pending",
+    "accepted",
+    "rejected",
+  ], force: :cascade
+
+  create_table "applications", force: :cascade do |t|
+    t.string "name"
+    t.string "street"
+    t.string "city"
+    t.string "state"
+    t.string "zip_code"
+    t.text "desc"
+    t.bigint "pets_id"
+    t.enum "status", default: "in_progress", null: false, enum_name: "application_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pets_id"], name: "index_applications_on_pets_id"
+  end
 
   create_table "pets", force: :cascade do |t|
     t.boolean "adoptable"
@@ -53,6 +74,7 @@ ActiveRecord::Schema.define(version: 2021_02_13_001717) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "applications", "pets", column: "pets_id"
   add_foreign_key "pets", "shelters"
   add_foreign_key "veterinarians", "veterinary_offices"
 end
