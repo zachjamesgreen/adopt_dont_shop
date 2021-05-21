@@ -6,8 +6,13 @@ class ApplicationsController < ApplicationController
   end
 
   def create
-    app = Application.create(application_params)
-    redirect_to applications_show_path(app)
+    @application = Application.new(application_params)
+    if @application.save
+      redirect_to applications_show_path(@application), notice: "Application saved"
+    else
+      flash[:error] = @application.errors.full_messages
+      render :new
+    end
   end
 
   def show
