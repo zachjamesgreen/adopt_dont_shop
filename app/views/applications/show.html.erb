@@ -6,6 +6,16 @@
   <p>Zip Code: <%= @application.zip_code %></p>
   <p>Reason: <%= @application.desc %></p>
   <p>Status: <%= @application.status.humanize %></p>
+
+  <% if !@pets.empty? %>
+    <p id="pet_list">Pets: </p>
+    <ul>
+      <% @pets.each do |p| %>
+        <li><%= p.name %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
 </div>
 
 <div class="columns small-6">
@@ -17,10 +27,10 @@
 </div>
 
 <div class="columns small-6">
-  <% if @pets && !@pets.empty? %>
+  <% if @found_pets && !@found_pets.empty? %>
     <ul>
-      <% @pets.each do |p| %>
-        <li><a href=""><%= p.name %></a></li>
+      <% @found_pets.each do |p| %>
+        <li><%= p.name %><%= link_to "Adopt this Pet", "/applications/#{@application.id}/#{p.id}", method: :patch %></li>
       <% end %>
     </ul>
   <% end %>

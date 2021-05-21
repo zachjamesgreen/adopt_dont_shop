@@ -60,4 +60,23 @@ RSpec.describe 'application creation' do
     expect(page).to have_content "Name can't be blank"
     expect(Application.last).to eq app
   end
+
+  it 'should add pet to application' do
+    shelter = Shelter.create! attributes_for(:shelter)
+    pet = Pet.new attributes_for(:pet)
+    pet.shelter = shelter
+    pet.save!
+    app = Application.create! attributes_for(:application)
+    visit "/applications/#{app.id}"
+    fill_in 'term', with: pet.name
+    click_button 'commit'
+
+    expect(page).to have_content pet.name
+
+    expect(page).to have_link 'Adopt this Pet', href: "/applications/#{app.id}/#{pet.id}"
+    click_link 'Adopt this Pet'
+    expect(page).to have_current_path "/applications/#{app.id}"
+    expect(page).to have_content pet.name
+
+  end
 end
