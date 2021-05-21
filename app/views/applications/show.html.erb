@@ -7,3 +7,23 @@
   <p>Reason: <%= @application.desc %></p>
   <p>Status: <%= @application.status.humanize %></p>
 </div>
+
+<div class="columns small-6">
+  <h5>Add a Pet to this Application</h5>
+  <%= form_with url: "/applications/#{@application.id}", method: :get, local: true do |f| %>
+    <%= f.text_field :term, placeholder: "Search By Name" %>
+    <%= f.submit "Search" %>
+  <% end %>
+</div>
+
+<div class="columns small-6">
+  <% if @pets && !@pets.empty? %>
+    <ul>
+      <% @pets.each do |p| %>
+        <li><a href=""><%= p.name %></a></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
+
+
