@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'application creation' do
   it 'should see start application link' do
-    visit('/pets')
-    expect(page).to have_link('Start an Application', href: '/applications/new')
+    visit '/pets'
+    expect(page).to have_link 'Start an Application', href: '/applications/new'
   end
 
   it 'renders the new form' do
@@ -20,7 +20,7 @@ RSpec.describe 'application creation' do
   end
 
   it 'should be able to fill out and submit form' do
-    visit('/applications/new')
+    visit '/applications/new'
     fill_in 'Name', with: 'Zach'
     fill_in 'Street', with: 'Zach'
     fill_in 'City', with: 'Zach'
@@ -38,5 +38,26 @@ RSpec.describe 'application creation' do
     expect(page).to have_content "Zip Code: Zach"
     expect(page).to have_content "Reason: Zach"
     expect(page).to have_content "Status: In progress"
+  end
+
+  it 'should fail to save form and show a message when all fields are not complete' do
+    app = Application.create attributes_for(:application)
+    visit '/applications/new'
+    fill_in 'Name', with: 'Zach'
+    click_button 'commit'
+    expect(page).to have_content "Street can't be blank"
+    expect(page).to have_content "City can't be blank"
+    expect(page).to have_content "State can't be blank"
+    expect(page).to have_content "Zip code can't be blank"
+    expect(page).to have_content "Desc can't be blank"
+    fill_in 'Name', with: ''
+    fill_in 'Street', with: 'Zach'
+    fill_in 'City', with: 'Zach'
+    fill_in 'State', with: 'Zach'
+    fill_in 'Zip Code', with: 'Zach'
+    fill_in 'Why is your home good for this pet?', with: 'Zach'
+    click_button 'commit'
+    expect(page).to have_content "Name can't be blank"
+    expect(Application.last).to eq app
   end
 end

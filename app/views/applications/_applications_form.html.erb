@@ -1,5 +1,5 @@
 <div class="columns small-10">
-  <%= form_with model: @application do |f| %>
+  <%= form_with model: @application, local: true do |f| %>
     <%= f.label :name %>
     <%= f.text_field :name %>
     <%= f.label :street %>

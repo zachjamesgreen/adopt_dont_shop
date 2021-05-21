@@ -13,18 +13,18 @@
 
   <body>
 
-    <% flash.each do |type, msg| %>
-      <div>
-        <%= msg %>
-      </div>
-    <% end %>
+    <%# flash.each do |type, msg| %>
+<!--      <div>-->
+        <%#= msg %>
+<!--      </div>-->
+    <%# end %>
 
-    <section>
-      <p><%= link_to "Pets", "/pets" %></p>
-      <p><%= link_to "Shelters", "/shelters" %></p>
-      <p><%= link_to "Veterinarians", "/veterinarians" %></p>
-      <p><%= link_to "Veterinary Offices", "/veterinary_offices" %></p>
-    </section>
+    <ul>
+      <li><%= link_to "Pets", "/pets" %></li>
+      <li><%= link_to "Shelters", "/shelters" %></li>
+      <li><%= link_to "Veterinarians", "/veterinarians" %></li>
+      <li><%= link_to "Veterinary Offices", "/veterinary_offices" %></li>
+    </ul>
 
     <div class="row">
       <%= yield %>
