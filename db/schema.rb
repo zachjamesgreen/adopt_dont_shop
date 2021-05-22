@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_22_034336) do
+ActiveRecord::Schema.define(version: 2021_05_22_203305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,11 +29,9 @@ ActiveRecord::Schema.define(version: 2021_05_22_034336) do
     t.string "state"
     t.string "zip_code"
     t.text "desc"
-    t.bigint "pet_id"
     t.enum "status", default: "in_progress", null: false, enum_name: "application_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["pet_id"], name: "index_applications_on_pet_id"
   end
 
   create_table "applications_pets", id: false, force: :cascade do |t|
@@ -82,7 +80,6 @@ ActiveRecord::Schema.define(version: 2021_05_22_034336) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "applications", "pets"
   add_foreign_key "pets", "shelters"
   add_foreign_key "veterinarians", "veterinary_offices"
 end
