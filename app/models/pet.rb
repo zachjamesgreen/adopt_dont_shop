@@ -13,10 +13,4 @@ class Pet < ApplicationRecord
   def self.adoptable
     where(adoptable: true)
   end
-
-  #TODO test this method
-  def self.get_pets_not_on_app(app)
-    pets = app.pets
-    self.where.not(id: pets.ids)
-  end
 end

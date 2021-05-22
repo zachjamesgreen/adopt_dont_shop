@@ -10,4 +10,8 @@ class Application < ApplicationRecord
   # validates :desc, presence: true
 
   enum status: {in_progress: 'in_progress', pending: 'pending', accepted: 'accepted', rejected: 'rejected'}
+
+  def get_pets_not_on_app
+    Pet.where.not(id: self.pets.ids)
+  end
 end
