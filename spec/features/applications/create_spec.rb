@@ -93,7 +93,12 @@ RSpec.describe 'application creation' do
     expect(page).to have_no_content 'Add a Pet to this Application'
     expect(page).to have_no_selector :css, '#pet_search_form'
     expect(page).to have_content "Status: Pending"
+  end
 
-
+  it 'should not have submit button if no pets' do
+    app = Application.create! attributes_for(:application)
+    visit "/applications/#{app.id}"
+    expect(page).to have_no_content 'Why are you good for this/these pet(s)?'
+    expect(page).to have_no_selector :css, '#desc_form'
   end
 end
