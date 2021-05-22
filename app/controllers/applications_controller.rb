@@ -10,19 +10,40 @@ class ApplicationsController < ApplicationController
     if @application.save
       redirect_to applications_show_path(@application), notice: "Application saved"
     else
-      flash[:error] = @application.errors.full_messages
+      flash.now[:application_error] = @application.errors.full_messages
       render :new
     end
   end
 
   def show
     @application = Application.find(params[:id])
-    @pets = Pet.search(params[:term]) if params[:term]
+    @pets = @application.pets
+    @found_pets = Pet.search(params[:term]).get_pets_not_on_app(@application) if params[:term]
+  end
+
+  def update
+    #TODO Test Issue #7, Deploy App, Fix Prod database,
+    app = Application.find params[:id]
+
+    if params[:pet_id]
+      if app.pets << Pet.find(params[:pet_id])
+        redirect_to applications_show_path(app)
+        return
+      end
+    end
+
+    if params[:desc]
+      app.desc = params[:desc]
+      app.status = 'pending'
+      app.save!
+      redirect_to applications_show_path(app)
+      return
+    end
   end
 
   private
 
   def application_params
-    params.require(:application).permit(:name, :street, :city, :state, :zip_code, :desc, :status)
+    params.require(:application).permit(:name, :street, :city, :state, :zip_code, :desc)
   end
 end

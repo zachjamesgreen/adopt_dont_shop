@@ -1,5 +1,6 @@
 require 'factory_bot'
 
+ApplicationPet.delete_all
 Pet.delete_all
 Shelter.delete_all
 

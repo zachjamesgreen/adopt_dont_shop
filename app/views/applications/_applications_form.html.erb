@@ -1,3 +1,12 @@
+<% if flash[:application_error] %>
+  <div data-alert class="callout alert">
+    <% flash[:application_error].each do |msg| %>
+      <ul>
+        <li><%= msg %></li>
+      </ul>
+    <% end %>
+  </div>
+<% end %>
 <div class="columns small-10">
   <%= form_with model: @application, local: true do |f| %>
     <%= f.label :name %>
@@ -10,10 +19,8 @@
     <%= f.text_field :state %>
     <%= f.label :zip_code, 'Zip Code' %>
     <%= f.text_field :zip_code %>
-    <%= f.label :desc, 'Why is your home good for this pet?'%>
-    <%= f.text_area :desc %>
     <%= f.label :status %>
-    <%= f.select :status, get_statuses %>
+    <%= f.select :status, get_statuses, {}, disabled: true %>
     <%= f.submit %>
   <% end %>
 </div>
