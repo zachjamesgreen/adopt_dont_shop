@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_21_040824) do
+ActiveRecord::Schema.define(version: 2021_05_22_034336) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 2021_05_21_040824) do
   create_table "applications_pets", id: false, force: :cascade do |t|
     t.bigint "application_id"
     t.bigint "pet_id"
+    t.index ["application_id", "pet_id"], name: "by_application_and_pet", unique: true
     t.index ["application_id"], name: "index_applications_pets_on_application_id"
     t.index ["pet_id"], name: "index_applications_pets_on_pet_id"
   end
@@ -82,8 +83,6 @@ ActiveRecord::Schema.define(version: 2021_05_21_040824) do
   end
 
   add_foreign_key "applications", "pets"
-  add_foreign_key "applications_pets", "applications"
-  add_foreign_key "applications_pets", "pets"
   add_foreign_key "pets", "shelters"
   add_foreign_key "veterinarians", "veterinary_offices"
 end

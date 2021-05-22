@@ -19,8 +19,6 @@
     <%= f.text_field :state %>
     <%= f.label :zip_code, 'Zip Code' %>
     <%= f.text_field :zip_code %>
-    <%= f.label :desc, 'Why is your home good for this pet?'%>
-    <%= f.text_area :desc %>
     <%= f.label :status %>
     <%= f.select :status, get_statuses, {}, disabled: true %>
     <%= f.submit %>

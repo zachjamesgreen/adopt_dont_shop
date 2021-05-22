@@ -7,33 +7,43 @@
   <p>Reason: <%= @application.desc %></p>
   <p>Status: <%= @application.status.humanize %></p>
 
-  <% if !@pets.empty? %>
+  <% unless @pets.empty? %>
     <p id="pet_list">Pets: </p>
     <ul>
       <% @pets.each do |p| %>
         <li><%= p.name %></li>
       <% end %>
     </ul>
-  <% end %>
 
-</div>
-
-<div class="columns small-6">
-  <h5>Add a Pet to this Application</h5>
-  <%= form_with url: "/applications/#{@application.id}", method: :get, local: true do |f| %>
-    <%= f.text_field :term, placeholder: "Search By Name" %>
-    <%= f.submit "Search" %>
-  <% end %>
-</div>
-
-<div class="columns small-6">
-  <% if @found_pets && !@found_pets.empty? %>
-    <ul>
-      <% @found_pets.each do |p| %>
-        <li><%= p.name %><%= link_to "Adopt this Pet", "/applications/#{@application.id}/#{p.id}", method: :patch %></li>
+    <% unless @application.pending? %>
+      <%= form_with action: "/applications/#{@application.id}", method: :patch, local: true, id: 'desc_form' do |f| %>
+        <%= f.label "Why are you good for this/these pet(s)?" %>
+        <%= f.text_area :desc %>
+        <%= f.submit :submit %>
       <% end %>
-    </ul>
+    <% end %>
   <% end %>
+
 </div>
+
+<% unless @application.pending? %>
+  <div class="columns small-6">
+    <h5>Add a Pet to this Application</h5>
+    <%= form_with url: "/applications/#{@application.id}", method: :get, local: true, id: 'pet_search_form' do |f| %>
+      <%= f.text_field :term, placeholder: "Search By Name" %>
+      <%= f.submit "Search" %>
+    <% end %>
+  </div>
+
+  <div class="columns small-6">
+    <% if @found_pets && !@found_pets.empty? %>
+      <ul>
+        <% @found_pets.each do |p| %>
+          <li><%= p.name %><%= link_to "Adopt this Pet", "/applications/#{@application.id}/#{p.id}", method: :patch %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+<% end %>
 
 

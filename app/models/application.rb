@@ -7,7 +7,7 @@ class Application < ApplicationRecord
   validates :city, presence: true
   validates :state, presence: true
   validates :zip_code, presence: true
-  validates :desc, presence: true
+  # validates :desc, presence: true
 
   enum status: {in_progress: 'in_progress', pending: 'pending', accepted: 'accepted', rejected: 'rejected'}
 end

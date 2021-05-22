@@ -15,7 +15,6 @@ RSpec.describe 'application creation' do
     expect(find('form')).to have_content('City')
     expect(find('form')).to have_content('State')
     expect(find('form')).to have_content('Zip Code')
-    expect(find('form')).to have_content('Why is your home good for this pet?')
     expect(find('form')).to have_content('Status')
   end
 
@@ -26,8 +25,6 @@ RSpec.describe 'application creation' do
     fill_in 'City', with: 'Zach'
     fill_in 'State', with: 'Zach'
     fill_in 'Zip Code', with: 'Zach'
-    fill_in 'Why is your home good for this pet?', with: 'Zach'
-    select('In progress', from: 'application[status]')
     click_button 'commit'
     app = Application.last
     expect(page).to have_current_path "/applications/#{app.id}"
@@ -36,7 +33,6 @@ RSpec.describe 'application creation' do
     expect(page).to have_content "City: Zach"
     expect(page).to have_content "State: Zach"
     expect(page).to have_content "Zip Code: Zach"
-    expect(page).to have_content "Reason: Zach"
     expect(page).to have_content "Status: In progress"
   end
 
@@ -49,13 +45,11 @@ RSpec.describe 'application creation' do
     expect(page).to have_content "City can't be blank"
     expect(page).to have_content "State can't be blank"
     expect(page).to have_content "Zip code can't be blank"
-    expect(page).to have_content "Desc can't be blank"
     fill_in 'Name', with: ''
     fill_in 'Street', with: 'Zach'
     fill_in 'City', with: 'Zach'
     fill_in 'State', with: 'Zach'
     fill_in 'Zip Code', with: 'Zach'
-    fill_in 'Why is your home good for this pet?', with: 'Zach'
     click_button 'commit'
     expect(page).to have_content "Name can't be blank"
     expect(Application.last).to eq app
@@ -77,6 +71,29 @@ RSpec.describe 'application creation' do
     click_link 'Adopt this Pet'
     expect(page).to have_current_path "/applications/#{app.id}"
     expect(page).to have_content pet.name
+
+  end
+
+  it 'should submit the application' do
+    shelter = Shelter.create! attributes_for(:shelter)
+    app = Application.create! attributes_for(:application)
+    pet = Pet.new attributes_for(:pet)
+    pet.shelter = shelter
+    pet.save!
+    app.pets << pet
+    visit "/applications/#{app.id}"
+    within('#desc_form') do
+      expect(page).to have_content('Why are you good for this/these pet(s)?')
+      expect(page).to have_field('desc')
+      fill_in('desc', with: 'Test')
+      click_on 'commit'
+    end
+    expect(page).to have_current_path "/applications/#{app.id}"
+    expect(page).to have_content pet.name
+    expect(page).to have_no_content 'Add a Pet to this Application'
+    expect(page).to have_no_selector :css, '#pet_search_form'
+    expect(page).to have_content "Status: Pending"
+
 
   end
 end

@@ -5,9 +5,6 @@ FactoryBot.define do
     city {Faker::Address.city}
     state {Faker::Address.state_abbr}
     zip_code {Faker::Address.zip_code}
-    desc {Faker::Lorem.paragraph}
-    # status {%w(in_progress pending accepted rejected).sample}
-    status { 'in_progress' }
   end
 
   factory :pet do
