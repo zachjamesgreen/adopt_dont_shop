@@ -1,0 +1,34 @@
+<div class="columns small-12">
+  <h1>Admin Application Show</h1>
+</div>
+
+<div class="columns small-12">
+  <p>Name: <%= @application.name %></p>
+  <p>Street: <%= @application.street %></p>
+  <p>City: <%= @application.city %></p>
+  <p>State: <%= @application.state %></p>
+  <p>Zip Code: <%= @application.zip_code %></p>
+  <p>Reason: <%= @application.desc %></p>
+</div>
+
+<div class="columns small-12">
+  <h3>Pets: </h3>
+  <ul>
+    <% @application.pets.each do |p| %>
+      <% approved = p.approved(@application) %>
+      <li>
+        <%= p.name %>
+        <% if approved == true %>
+          <p>✅ Approved</p>
+        <% elsif approved == false %>
+          <p style="color: red">X Rejected</p>
+        <% else %>
+          <%= link_to 'Approve', "/admin/applications/#{@application.id}/approve_pet/#{p.id}" %>
+          <%= link_to 'Reject', "/admin/applications/#{@application.id}/reject_pet/#{p.id}" %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+

@@ -36,6 +36,6 @@ class Shelter < ApplicationRecord
   def shelter_pets_filtered_by_age(age_filter)
     adoptable_pets.where('age >= ?', age_filter)
   end
-
-
 end
+
+# SELECT  "shelters".* FROM "shelters" INNER JOIN "applications_pets" ON "pets"."id" = "applications_pets"."pet_id"
