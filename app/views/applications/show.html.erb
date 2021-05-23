@@ -35,15 +35,18 @@
     <% end %>
   </div>
 
-  <div class="columns small-6">
-    <% if @found_pets && !@found_pets.empty? %>
+  <% if @found_pets && !@found_pets.empty? %>
+    <div class="columns small-6">
       <ul>
         <% @found_pets.each do |p| %>
-          <li><%= p.name %><%= link_to "Adopt this Pet", "/applications/#{@application.id}/#{p.id}", method: :patch %></li>
+          <li>
+            <%= link_to p.name, pets_show_path(p) %>
+            <%= link_to "Adopt this Pet", "/applications/#{@application.id}/#{p.id}", method: :patch %>
+          </li>
         <% end %>
       </ul>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 <% end %>
 
 

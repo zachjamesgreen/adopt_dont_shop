@@ -1,6 +1,7 @@
 require 'factory_bot'
 
 ApplicationPet.delete_all
+Application.delete_all
 Pet.delete_all
 Shelter.delete_all
 
@@ -10,3 +11,8 @@ Shelter.delete_all
     s.pets.create!(FactoryBot::attributes_for(:pet))
   end
 end
+
+5.times do
+  Application.create! FactoryBot::attributes_for(:application)
+end
+

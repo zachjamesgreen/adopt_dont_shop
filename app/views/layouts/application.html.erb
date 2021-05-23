@@ -13,11 +13,11 @@
 
   <body>
 
-    <%# flash.each do |type, msg| %>
-<!--      <div>-->
-        <%#= msg %>
-<!--      </div>-->
-    <%# end %>
+    <% flash.each do |type, msg| %>
+      <div>
+        <%= msg %>
+      </div>
+    <% end %>
 
     <ul>
       <li><%= link_to "Pets", "/pets" %></li>

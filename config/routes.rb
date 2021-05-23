@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   delete '/shelters/:id', to: 'shelters#destroy'
 
   get '/pets', to: 'pets#index'
-  get '/pets/:id', to: 'pets#show'
+  get '/pets/:id', to: 'pets#show', as: 'pets_show'
   get '/pets/:id/edit', to: 'pets#edit'
   patch '/pets/:id', to: 'pets#update'
   delete '/pets/:id', to: 'pets#destroy'
@@ -46,5 +46,8 @@ Rails.application.routes.draw do
 
   scope 'admin' do
     get '/shelters', to: 'admin#shelter_index'
+    get '/applications/:id', to: 'admin#application_show', as: 'admin_application_show'
+    get '/applications/:id/approve_pet/:pet_id', to: 'admin#approve_pet'
+    get '/applications/:id/reject_pet/:pet_id', to: 'admin#reject_pet'
   end
 end
