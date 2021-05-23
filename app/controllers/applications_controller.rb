@@ -18,8 +18,8 @@ class ApplicationsController < ApplicationController
   def show
     @application = Application.find(params[:id])
     @pets = @application.pets
-    @found_pets = Pet.search(params[:term]) #.get_pets_not_on_app(@application)
-    # @found_pets = @application.get_pets_not_on_app.where("name ILIKE ?", "%#{params[:term]}%") if params[:term]
+    # @found_pets = Pet.search(params[:term]).get_pets_not_on_app(@application)
+    @found_pets = @application.get_pets_not_on_app.where("name ILIKE ?", "%#{params[:term]}%") if params[:term]
   end
 
   def update
