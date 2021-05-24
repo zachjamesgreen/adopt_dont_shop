@@ -7,7 +7,7 @@ class AdminController < ApplicationsController
     # pending_applications = Application.where(status: :pending).flat_map(&:pets).map(&:shelter).uniq
     # pets_pending = pending_applications.flat_map &:pets
     # @shelters_pending = pets_pending.map(&:shelter).uniq
-    @shelters_pending = Application.where(status: :pending).flat_map(&:pets).map(&:shelter).uniq
+    @shelters_pending = Application.where(status: :pending).flat_map(&:pets).map(&:shelter).uniq.sort_by(&:name)
   end
 
   def shelter_show

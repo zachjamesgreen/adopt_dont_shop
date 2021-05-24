@@ -168,4 +168,20 @@ RSpec.describe 'Admin Features' do
     expect(page).to have_no_content @shelter_1.foster_program
     expect(page).to have_no_content @shelter_1.rank
   end
+
+  it 'should list shelters with pending application in alpha order' do
+    app = Application.create! attributes_for(:application)
+    pet1 = @shelter_1.pets.create! attributes_for(:pet)
+    pet2 = @shelter_2.pets.create! attributes_for(:pet)
+    pet3 = @shelter_3.pets.create! attributes_for(:pet)
+    app.pets << pet1; app.pets << pet2; app.pets << pet3
+    app.status = :pending
+    app.save!
+    visit '/admin/shelters'
+    sorted_shelters = @shelters.sort_by(&:name)
+    within '#shelters_pending_pets' do
+      expect(sorted_shelters[0].name).to appear_before(sorted_shelters[1].name)
+      expect(sorted_shelters[1].name).to appear_before(sorted_shelters[2].name)
+    end
+  end
 end
