@@ -10,6 +10,10 @@ class AdminController < ApplicationsController
     @shelters_pending = Application.where(status: :pending).flat_map(&:pets).map(&:shelter).uniq
   end
 
+  def shelter_show
+    @shelter = Shelter.admin_show_info params[:id]
+  end
+
   def application_index
     @applications = Application.all
   end

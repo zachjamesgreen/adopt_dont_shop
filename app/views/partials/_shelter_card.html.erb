@@ -1,8 +1,21 @@
-<div class="card columns small-2">
-  <div id="shelter-<%= shelter_card.id %>">
-    <h3><%= link_to shelter_card.name, shelter_show_path(shelter_card) %></h3>
-    <p>Created at: <%= shelter_card.created_at %></p>
-    <%= link_to "Update #{shelter_card.name}", "/shelters/#{shelter_card.id}/edit" %>
-    <%= link_to "Delete #{shelter_card.name}", "/shelters/#{shelter_card.id}", method: :delete %>
+
+
+<% if controller_name == 'admin' %>
+  <div class="card columns small-2">
+    <div id="shelter-<%= shelter_card.id %>">
+      <h3><%= link_to shelter_card.name, admin_shelter_show_path(shelter_card) %></h3>
+      <p>Created at: <%= shelter_card.created_at %></p>
+      <%= link_to "Update #{shelter_card.name}", "/admin/shelters/#{shelter_card.id}/edit" %>
+      <%= link_to "Delete #{shelter_card.name}", "/admin/shelters/#{shelter_card.id}", method: :delete %>
+    </div>
   </div>
-</div>
+<% else %>
+  <div class="card columns small-2">
+    <div id="shelter-<%= shelter_card.id %>">
+      <h3><%= link_to shelter_card.name, shelter_show_path(shelter_card) %></h3>
+      <p>Created at: <%= shelter_card.created_at %></p>
+      <%= link_to "Update #{shelter_card.name}", "/shelters/#{shelter_card.id}/edit" %>
+      <%= link_to "Delete #{shelter_card.name}", "/shelters/#{shelter_card.id}", method: :delete %>
+    </div>
+  </div>
+<% end %>

@@ -160,4 +160,12 @@ RSpec.describe 'Admin Features' do
       expect(page).to have_link 'Reject', href: "/admin/applications/#{app2.id}/reject_pet/#{pet.id}"
     end
   end
+
+  it 'shelter admin show page should only have name and city' do
+    visit "/admin/shelters/#{@shelter_1.id}"
+    expect(page).to have_content @shelter_1.name
+    expect(page).to have_content @shelter_1.city
+    expect(page).to have_no_content @shelter_1.foster_program
+    expect(page).to have_no_content @shelter_1.rank
+  end
 end
