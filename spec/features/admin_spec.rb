@@ -120,4 +120,18 @@ RSpec.describe 'Admin Features' do
     expect(page).to have_no_link 'Approve all pets', href: "/admin/applications/#{app.id}/approve_pets"
     expect(page).to have_content 'Status: rejected'
   end
+
+  it 'approved application makes pet no adoptable' do
+    app = Application.create! attributes_for(:application)
+    pet = @shelter_1.pets.create! attributes_for(:pet)
+    app.pets << pet
+    app.status = :pending
+    app.save!
+    visit "/admin/applications/#{app.id}"
+    within "#pet-#{pet.id}" do
+      click_on 'Approve'
+    end
+    visit "/pets/#{pet.id}"
+    expect(page).to have_content 'Adoptable?: false'
+  end
 end

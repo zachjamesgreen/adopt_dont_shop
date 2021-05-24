@@ -12,7 +12,7 @@
 
 <% @pets.each do |pet| %>
   <div class="card columns small-2">
-    <h3><%= pet.name %></h3>
+    <h3><%= link_to pet.name, pets_show_path(pet) %></h3>
     <p>Age: <%= pet.age %></p>
     <p>Breed: <%= pet.breed %></p>
     <p>Adoptable: </p>

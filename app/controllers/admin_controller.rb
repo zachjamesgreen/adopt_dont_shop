@@ -26,6 +26,7 @@ class AdminController < ApplicationsController
     if app.pets.all? { |pet| pet.approved?(app) }
       app.status = :accepted
       app.save
+      app.pets.update(adoptable: false)
     end
     redirect_to admin_application_show_path(app)
   end
