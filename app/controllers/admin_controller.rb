@@ -34,12 +34,19 @@ class AdminController < ApplicationsController
   def approve_pets
     app = Application.find params[:id]
     app.pets.each do |pet|
+      next unless pet.adoptable?
       ap = ApplicationPet.find_by(application_id: app.id, pet_id: pet.id)
       ap.status = true
       ap.save
     end
-    app.status = :accepted
-    app.save
+    if app.pets.all? { |pet| pet.approved?(app) }
+      app.status = :accepted
+      app.save
+    else
+      flash[:pet_error] = "One or more pets can't be Approved"
+      redirect_to admin_application_show_path(app)
+      return
+    end
     redirect_to admin_application_show_path(app)
   end
 
@@ -47,6 +54,7 @@ class AdminController < ApplicationsController
     app = Application.find params[:id]
     ap = ApplicationPet.find_by(application_id: app.id, pet_id: params[:pet_id])
     ap.status = false
+    ap.save
     app.status = :rejected
     app.save
     redirect_to admin_application_show_path(app)

@@ -15,8 +15,13 @@
 </div>
 
 <% unless @application.pets.empty? %>
+  <% if flash[:pet_error] %>
+    <div data-alert class="callout alert">
+      <%= flash[:pet_error] %>
+    </div>
+  <% end %>
 
-  <div class="columns small-12">
+  <div class="columns small-12" id="pets">
     <% unless @application.accepted? || @application.rejected? %>
       <%= link_to 'Approve all pets', "/admin/applications/#{@application.id}/approve_pets" %>
     <% end %>
@@ -31,6 +36,9 @@
             <p>✅ Approved</p>
           <% elsif approved == false %>
             <p style="color: red">X Rejected</p>
+          <% elsif p.accepted? %>
+            <p>This pet has been approved for adoption.</p>
+            <%= link_to 'Reject', "/admin/applications/#{@application.id}/reject_pet/#{p.id}" %>
           <% else %>
             <%= link_to 'Approve', "/admin/applications/#{@application.id}/approve_pet/#{p.id}" %>
             <%= link_to 'Reject', "/admin/applications/#{@application.id}/reject_pet/#{p.id}" %>

@@ -17,4 +17,10 @@ class Pet < ApplicationRecord
   def approved?(app)
     ApplicationPet.find_by(application_id: app.id, pet_id: id).status
   end
+
+  def accepted?
+    if (app = applications.find_by(status: :accepted))
+      app.accepted?
+    end
+  end
 end
