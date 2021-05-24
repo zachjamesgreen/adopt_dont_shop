@@ -22,7 +22,7 @@ class AdminController < ApplicationsController
 
   def reject_pet
     app = Application.find params[:id]
-    ApplicationPet.where(application_id: app.id, pet_id: params[:pet_id]).first
+    ap = ApplicationPet.where(application_id: app.id, pet_id: params[:pet_id]).first
     ap.status = false
     ap.save
     redirect_to admin_application_show_path(app)

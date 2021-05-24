@@ -37,10 +37,24 @@ RSpec.describe 'Admin Features' do
     pet1 = @shelter_1.pets.create attributes_for(:pet)
     app1.pets << pet1
     app1.status = :pending
+    app1.save!
     visit "/admin/applications/#{app1.id}"
     expect(page).to have_link 'Approve', href: "/admin/applications/#{app1.id}/approve_pet/#{pet1.id}"
     click_on 'Approve'
     expect(page).to have_no_link 'Approve'
     expect(page).to have_content '✅ Approved'
+  end
+
+  it 'should reject pet on application' do
+    app1 = Application.create! attributes_for(:application)
+    pet1 = @shelter_1.pets.create attributes_for(:pet)
+    app1.pets << pet1
+    app1.status = :pending
+    app1.save!
+    visit "/admin/applications/#{app1.id}"
+    expect(page).to have_link 'Reject', href: "/admin/applications/#{app1.id}/reject_pet/#{pet1.id}"
+    click_on 'Reject'
+    expect(page).to have_no_link 'Reject'
+    expect(page).to have_content 'X Rejected'
   end
 end
