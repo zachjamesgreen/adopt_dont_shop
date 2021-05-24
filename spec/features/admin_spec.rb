@@ -62,14 +62,18 @@ RSpec.describe 'Admin Features' do
     approve = Application.create! attributes_for(:application)
     app = Application.create! attributes_for(:application)
     pet = @shelter_1.pets.create attributes_for(:pet)
+    pet2 = @shelter_1.pets.create attributes_for(:pet)
     approve.pets << pet
+    approve.pets << pet2
     approve.status = :pending
     approve.save!
     app.pets << pet
     app.status = :pending
     app.save!
     visit "/admin/applications/#{approve.id}"
-    click_on 'Approve'
+    within "#pet-#{pet.id}"do
+      click_on 'Approve'
+    end
     visit "/admin/applications/#{app.id}"
     expect(page).to have_link 'Approve', href: "/admin/applications/#{app.id}/approve_pet/#{pet.id}"
     expect(page).to have_link 'Reject', href: "/admin/applications/#{app.id}/reject_pet/#{pet.id}"
@@ -104,5 +108,56 @@ RSpec.describe 'Admin Features' do
     expect(page).to have_current_path "/admin/applications/#{app.id}"
     expect(page).to have_no_link 'Approve all pets', href: "/admin/applications/#{app.id}/approve_pets"
     expect(page).to have_content 'Status: accepted'
+  end
+
+  it 'should rejected app if one pet is rejected' do
+    app = Application.create! attributes_for(:application)
+    pet = @shelter_1.pets.create! attributes_for(:pet)
+    app.pets << pet
+    app.status = :pending
+    app.save!
+    visit "/admin/applications/#{app.id}"
+    within "#pet-#{pet.id}" do
+      click_on 'Reject'
+    end
+    expect(page).to have_current_path "/admin/applications/#{app.id}"
+    expect(page).to have_no_link 'Approve all pets', href: "/admin/applications/#{app.id}/approve_pets"
+    expect(page).to have_content 'Status: rejected'
+  end
+
+  it 'approved application makes pet no adoptable' do
+    app = Application.create! attributes_for(:application)
+    pet = @shelter_1.pets.create! attributes_for(:pet)
+    app.pets << pet
+    app.status = :pending
+    app.save!
+    visit "/admin/applications/#{app.id}"
+    within "#pet-#{pet.id}" do
+      click_on 'Approve'
+    end
+    visit "/pets/#{pet.id}"
+    expect(page).to have_content 'Adoptable?: false'
+  end
+
+  it 'pets can only have one approved application on them at any time' do
+    app1 = Application.create! attributes_for(:application)
+    app2 = Application.create! attributes_for(:application)
+    pet = @shelter_1.pets.create! attributes_for(:pet)
+    app1.pets << pet
+    app2.pets << pet
+    app1.status = :pending
+    app2.status = :pending
+    app1.save!
+    app2.save!
+    visit "/admin/applications/#{app1.id}"
+    within "#pet-#{pet.id}" do
+      click_on 'Approve'
+    end
+    visit "/admin/applications/#{app2.id}"
+    within '#pets' do
+      expect(page).to have_content 'This pet has been approved for adoption.'
+      expect(page).to have_no_link 'Approve', href: "/admin/applications/#{app2.id}/approve_pet/#{pet.id}"
+      expect(page).to have_link 'Reject', href: "/admin/applications/#{app2.id}/reject_pet/#{pet.id}"
+    end
   end
 end

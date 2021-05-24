@@ -15,7 +15,7 @@
       <% end %>
     </ul>
 
-    <% unless @application.pending? %>
+    <% unless @application.pending? || @application.rejected? || @application.accepted? %>
       <%= form_with action: "/applications/#{@application.id}", method: :patch, local: true, id: 'desc_form' do |f| %>
         <%= f.label "Why are you good for this/these pet(s)?" %>
         <%= f.text_area :desc %>
@@ -26,7 +26,7 @@
 
 </div>
 
-<% unless @application.pending? %>
+<% unless @application.pending?|| @application.rejected? || @application.accepted? %>
   <div class="columns small-6">
     <h5>Add a Pet to this Application</h5>
     <%= form_with url: "/applications/#{@application.id}", method: :get, local: true, id: 'pet_search_form' do |f| %>
