@@ -26,12 +26,17 @@ class Shelter < ApplicationRecord
     find_by_sql("SELECT name,city FROM shelters WHERE id = #{id} LIMIT 1")[0]
   end
 
+  #created by me
+  def self.with_pending_apps
+    joins(pets: :applications).where({applications: {status: :pending}}).group(:id).order(:name)
+  end
+
   def pet_count
     pets.count
   end
 
   def adoptable_pets
-    pets.where(adoptable: true)
+    pets.adoptable
   end
 
   def alphabetical_pets

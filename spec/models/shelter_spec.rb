@@ -59,6 +59,16 @@ RSpec.describe Shelter, type: :model do
       end
 
     end
+    describe "#with_pending_apps" do
+      it 'should only give shelters with pending apps' do
+        app = Application.new attributes_for(:application)
+        app.pets << @pet_1
+        app.status = :pending
+        app.save!
+        result = Shelter.with_pending_apps
+        expect(result).to eq [@shelter_1]
+      end
+    end
   end
 
   describe 'instance methods' do
