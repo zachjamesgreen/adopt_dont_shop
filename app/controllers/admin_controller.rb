@@ -2,7 +2,10 @@ class AdminController < ApplicationsController
 
   def shelter_index
     @shelters = Shelter.all_rev_alpha
-    # @shelters_pending
+    # pending_applications = Application.where(status: :pending).flat_map(&:pets).map(&:shelter).uniq
+    # pets_pending = pending_applications.flat_map &:pets
+    # @shelters_pending = pets_pending.map(&:shelter).uniq
+    @shelters_pending = Application.where(status: :pending).flat_map(&:pets).map(&:shelter).uniq
   end
 
   def application_show

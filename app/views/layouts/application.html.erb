@@ -13,20 +13,25 @@
 
   <body>
 
-    <% flash.each do |type, msg| %>
-      <div>
-        <%= msg %>
-      </div>
-    <% end %>
 
-    <ul>
-      <li><%= link_to "Pets", "/pets" %></li>
-      <li><%= link_to "Shelters", "/shelters" %></li>
-      <li><%= link_to "Veterinarians", "/veterinarians" %></li>
-      <li><%= link_to "Veterinary Offices", "/veterinary_offices" %></li>
-    </ul>
 
     <div class="row">
+      <% flash.each do |type, msg| %>
+        <div data-alert class="callout alert">
+          <ul>
+            <li><%= msg %></li>
+          </ul>
+        </div>
+      <% end %>
+
+
+      <ul class="menu">
+        <li><%= link_to "Pets", "/pets" %></li>
+        <li><%= link_to "Shelters", "/shelters" %></li>
+        <li><%= link_to "Veterinarians", "/veterinarians" %></li>
+        <li><%= link_to "Veterinary Offices", "/veterinary_offices" %></li>
+      </ul>
+
       <%= yield %>
     </div>
 
