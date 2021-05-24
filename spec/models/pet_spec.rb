@@ -30,6 +30,8 @@ RSpec.describe Pet, type: :model do
         expect(Pet.adoptable).to eq([@pet_1, @pet_2])
       end
     end
+
+
   end
 
   describe 'instance methods' do
@@ -37,6 +39,33 @@ RSpec.describe Pet, type: :model do
       it 'returns the shelter name for the given pet' do
         expect(@pet_3.shelter_name).to eq(@shelter_1.name)
       end
+    end
+  end
+
+  describe '#approved?' do
+    it 'should return approved pets' do
+      app = Application.create! attributes_for(:application)
+      app.pets << [@pet_1,@pet_2,@pet_3]
+      ap = ApplicationPet.find_by application_id: app.id, pet_id: @pet_1.id
+      ap.status = true
+      ap.save!
+      ap = ApplicationPet.find_by application_id: app.id, pet_id: @pet_3.id
+      ap.status = false
+      ap.save!
+      expect(@pet_1.approved?(app)).to be true
+      expect(@pet_2.approved?(app)).to be nil
+      expect(@pet_3.approved?(app)).to be false
+
+    end
+  end
+
+  describe '#accepted?' do
+    it 'should return true if the pet is a part of an accepted application' do
+      app = Application.create! attributes_for(:application)
+      app.pets << @pet_1
+      app.status = :accepted
+      app.save!
+      expect(@pet_1.accepted?).to be true
     end
   end
 end
