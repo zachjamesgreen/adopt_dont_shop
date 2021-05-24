@@ -52,6 +52,6 @@ Rails.application.routes.draw do
     get '/applications/:id', to: 'admin#application_show', as: 'admin_application_show'
     get '/applications/:id/approve_pet/:pet_id', to: 'admin#approve_pet'
     get '/applications/:id/reject_pet/:pet_id', to: 'admin#reject_pet'
-    get '/admin/applications/:id/approve_pets', to: 'admin#approve_pets'
+    get '/applications/:id/approve_pets', to: 'admin#approve_pets'
   end
 end

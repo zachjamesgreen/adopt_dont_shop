@@ -20,10 +20,14 @@ class AdminController < ApplicationsController
 
   def approve_pet
     app = Application.find params[:id]
-    ap = ApplicationPet.where(application_id: app.id, pet_id: params[:pet_id]).first
+    ap = ApplicationPet.find_by(application_id: app.id, pet_id: params[:pet_id])
     ap.status = true
     ap.save
     redirect_to admin_application_show_path(app)
+    if app.pets.all? { |pet| pet.approved?(app) }
+      app.status = :accepted
+      app.save
+    end
   end
 
   def approve_pets
@@ -33,12 +37,14 @@ class AdminController < ApplicationsController
       ap.status = true
       ap.save
     end
-    redirect_to
+    app.status = :accepted
+    app.save
+    redirect_to "/admin/applications/#{app.id}"
   end
 
   def reject_pet
     app = Application.find params[:id]
-    ap = ApplicationPet.where(application_id: app.id, pet_id: params[:pet_id]).first
+    ap = ApplicationPet.find_by(application_id: app.id, pet_id: params[:pet_id])
     ap.status = false
     ap.save
     redirect_to admin_application_show_path(app)

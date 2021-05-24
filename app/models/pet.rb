@@ -14,7 +14,7 @@ class Pet < ApplicationRecord
     where(adoptable: true)
   end
 
-  def approved(app)
-    ApplicationPet.where(application_id: app.id, pet_id: id).first.status
+  def approved?(app)
+    ApplicationPet.find_by(application_id: app.id, pet_id: id).status
   end
 end
