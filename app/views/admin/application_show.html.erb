@@ -17,8 +17,7 @@
 <% unless @application.pets.empty? %>
 
   <div class="columns small-12">
-
-    <% unless @application.accepted? %>
+    <% unless @application.accepted? || @application.rejected? %>
       <%= link_to 'Approve all pets', "/admin/applications/#{@application.id}/approve_pets" %>
     <% end %>
 
