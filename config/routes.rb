@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   scope 'admin' do
     get '/', to: 'admin#index'
     get '/shelters', to: 'admin#shelter_index'
+    get '/shelters/:id', to: 'admin#shelter_show', as: 'admin_shelter_show'
     get '/applications', to: 'admin#application_index'
     get '/applications/:id', to: 'admin#application_show', as: 'admin_application_show'
     get '/applications/:id/approve_pet/:pet_id', to: 'admin#approve_pet'

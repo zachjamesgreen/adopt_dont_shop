@@ -47,6 +47,18 @@ RSpec.describe Shelter, type: :model do
         expect(Shelter.order_by_number_of_pets).to eq([@shelter_1, @shelter_3, @shelter_2])
       end
     end
+
+    describe '#admin_show_info' do
+      it 'should only have name and city' do
+        shelter = Shelter.admin_show_info(@shelter_1.id)
+        expect(shelter.name).to eq 'Aurora shelter'
+        expect(shelter.city).to eq 'Aurora, CO'
+        expect(shelter.id).to be_nil
+        expect { shelter.foster_program }.to raise_error(ActiveModel::MissingAttributeError)
+        expect { shelter.rank }.to raise_error(ActiveModel::MissingAttributeError)
+      end
+
+    end
   end
 
   describe 'instance methods' do

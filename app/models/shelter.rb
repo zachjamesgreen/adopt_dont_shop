@@ -18,7 +18,12 @@ class Shelter < ApplicationRecord
 
   # created by me
   def self.all_rev_alpha
-    Shelter.find_by_sql('SELECT * FROM shelters ORDER BY name DESC')
+    find_by_sql('SELECT * FROM shelters ORDER BY name DESC')
+  end
+
+  # created by me
+  def self.admin_show_info(id)
+    find_by_sql("SELECT name,city FROM shelters WHERE id = #{id} LIMIT 1")[0]
   end
 
   def pet_count
@@ -37,5 +42,3 @@ class Shelter < ApplicationRecord
     adoptable_pets.where('age >= ?', age_filter)
   end
 end
-
-# SELECT  "shelters".* FROM "shelters" INNER JOIN "applications_pets" ON "pets"."id" = "applications_pets"."pet_id"

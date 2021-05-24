@@ -1,0 +1,21 @@
+<div class="columns small-12">
+  <h3><%= @shelter.name %></h3>
+  <p><%= @shelter.city %></p>
+</div>
+
+<div class="columns small-12" id="stats">
+  <p>Average age of all pets: <%= @average_age %></p>
+  <p>Adoptable pets: <%= @adoptable %></p>
+  <p>Adopted pets: <%= @adopted.size %></p>
+</div>
+
+<div class="columns small-12" id="action-required">
+  <h3>Action Required</h3>
+  <% if @action_required_pets && !@action_required_pets.empty? %>
+    <% @action_required_pets.each do |p| %>
+      <ul>
+        <li><%= p.name %></li>
+      </ul>
+    <% end %>
+  <% end %>
+</div>

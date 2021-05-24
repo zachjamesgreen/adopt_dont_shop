@@ -7,7 +7,23 @@ class AdminController < ApplicationsController
     # pending_applications = Application.where(status: :pending).flat_map(&:pets).map(&:shelter).uniq
     # pets_pending = pending_applications.flat_map &:pets
     # @shelters_pending = pets_pending.map(&:shelter).uniq
-    @shelters_pending = Application.where(status: :pending).flat_map(&:pets).map(&:shelter).uniq
+    @shelters_pending = Application.where(status: :pending).flat_map(&:pets).map(&:shelter).uniq.sort_by(&:name)
+  end
+
+  def shelter_show
+    @shelter = Shelter.admin_show_info params[:id]
+    s = Shelter.find(params[:id])
+    @average_age = s.pets.average(:age)
+    @adoptable = s.pets.where(adoptable: true).size
+    @adopted = []
+    s.pets.map do |pet|
+      if pet.applications.any?{ |a| a.status == 'accepted'}
+        @adopted << pet
+      end
+    end
+    #TODO Issue #26
+    ids = ApplicationPet.distinct.select(:pet_id).where(pet_id: s.pets.ids, status: nil).pluck(:pet_id)
+    @action_required_pets = Pet.where(id: ids)
   end
 
   def application_index
