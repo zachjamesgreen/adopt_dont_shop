@@ -16,20 +16,19 @@ RSpec.describe 'Admin Features' do
     expect(sorted_shelters[1].name).to appear_before(sorted_shelters[0].name)
   end
 
-  xit 'should see section of shelters with pending applications' do
-    app1 = Application.create! attributes_for(:application)
-    app2 = Application.create! attributes_for(:application)
-    pet1 = @shelter_1.pets.create attributes_for(:pet)
-    pet2 = @shelter_1.pets.create attributes_for(:pet)
-    app1.pets << pet1
-    app2.pets << pet2
-    app1.status = :pending
-    app2.status = :pending
+  it 'should see section of shelters with pending applications' do
+    app = Application.create! attributes_for(:application)
+    pet = @shelter_1.pets.create attributes_for(:pet)
+    app.pets << pet
+    app.status = :pending
+    app.save!
     visit '/admin/shelters'
-    expect(page).to have_content "Shelter's with Pending Applications"
+    expect(page).to have_content "Shelters with pending applications"
+    expect(page).to have_content @shelter_1.name
+    expect(page).to have_content @shelter_2.name
+    expect(page).to have_content @shelter_3.name
     within '#shelters_pending_pets' do
       expect(page).to have_content @shelter_1.name
-      expect(page).to have_content @shelter_2.name
     end
   end
 

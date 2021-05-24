@@ -11,7 +11,7 @@
 </div>
 
 <% if @shelters_pending && !@shelters_pending.empty? %>
-  <div class="columns small-12">
+  <div class="columns small-12" id="shelters_pending_pets">
     <h3>Shelters with pending applications</h3>
     <ul>
       <% @shelters_pending.each do |s| %>
