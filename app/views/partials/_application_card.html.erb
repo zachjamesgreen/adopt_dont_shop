@@ -1,11 +1,27 @@
-<p><%= link_to application_card.name, applications_show_path(application_card) %></p>
-<% unless application_card.pets.empty? %>
-  <h6>Pets: </h6>
-  <ul>
-    <% application_card.pets.each do |p| %>
-      <li>
-        <%= link_to p.name, pets_show_path(p) %>
-      </li>
-    <% end %>
-  </ul>
+
+
+<% if controller_name == 'admin' %>
+  <p><%= link_to application_card.name, admin_application_show_path(application_card) %></p>
+  <% unless application_card.pets.empty? %>
+    <h6>Pets: </h6>
+    <ul>
+      <% application_card.pets.each do |p| %>
+        <li>
+          <%= link_to p.name, pets_show_path(p) %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+<% else %>
+  <p><%= link_to application_card.name, applications_show_path(application_card) %></p>
+  <% unless application_card.pets.empty? %>
+    <h6>Pets: </h6>
+    <ul>
+      <% application_card.pets.each do |p| %>
+        <li>
+          <%= link_to p.name, pets_show_path(p) %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
 <% end %>

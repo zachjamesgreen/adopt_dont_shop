@@ -224,4 +224,20 @@ RSpec.describe 'Admin Features' do
       expect(page).to have_content "Adopted pets: 3"
     end
   end
+
+  it 'should show action required' do
+    app = Application.create! attributes_for(:application)
+    pet = @shelter_1.pets.create! attributes_for(:pet)
+    app.pets << pet
+    app.status = :pending
+    app.save!
+
+    visit "/admin/shelters/#{@shelter_1.id}"
+    print page.html
+    within '#action-required' do
+      expect(page).to have_content 'Action Required'
+      expect(page).to have_content pet.name
+      expect(page).to have_link 'Pending Applications', href: "/admin/applications/#{app.id}"
+    end
+  end
 end

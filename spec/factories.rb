@@ -18,7 +18,7 @@ FactoryBot.define do
   factory :shelter do
     foster_program { true }
     # foster_program {rand(2) == 0 ? true : false}
-    name {Faker::Games::Pokemon.location}
+    name {Faker::Games::Pokemon.unique.location}
     city {Faker::Address.city}
     rank {rand(11)}
   end
