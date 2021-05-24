@@ -14,7 +14,16 @@
   <% if @action_required_pets && !@action_required_pets.empty? %>
     <% @action_required_pets.each do |p| %>
       <ul>
-        <li><%= p.name %></li>
+        <li>
+          <%= p.name %>
+          <ul>
+            <% p.applications.each do |app| %>
+              <% if p.approved?(app).nil? %>
+                <%= link_to 'Pending Applications', admin_application_show_path(app) %>
+              <% end %>
+            <% end %>
+          </ul>
+        </li>
       </ul>
     <% end %>
   <% end %>
