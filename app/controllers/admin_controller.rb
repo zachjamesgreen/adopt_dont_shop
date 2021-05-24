@@ -4,25 +4,16 @@ class AdminController < ApplicationsController
 
   def shelter_index
     @shelters = Shelter.all_rev_alpha
-    # pending_applications = Application.where(status: :pending).flat_map(&:pets).map(&:shelter).uniq
-    # pets_pending = pending_applications.flat_map &:pets
-    # @shelters_pending = pets_pending.map(&:shelter).uniq
     # @shelters_pending = Application.where(status: :pending).flat_map(&:pets).map(&:shelter).uniq.sort_by(&:name)
-    @shelters_pending = Shelter.joins(pets: :applications).where({applications: {status: :pending}}).group(:id).order(:name)
+    @shelters_pending = Shelter.with_pending_apps
   end
 
   def shelter_show
     @shelter = Shelter.admin_show_info params[:id]
     s = Shelter.find(params[:id])
     @average_age = s.pets.average(:age)
-    @adoptable = s.pets.where(adoptable: true).size
-    @adopted = []
-    s.pets.map do |pet|
-      if pet.applications.any?{ |a| a.status == 'accepted'}
-        @adopted << pet
-      end
-    end
-    #TODO Issue #26
+    @adoptable = s.pets.adoptable.size
+    @adopted = get_adopted_pets(s)
     ids = ApplicationPet.distinct.select(:pet_id).where(pet_id: s.pets.ids, status: nil).pluck(:pet_id)
     @action_required_pets = Pet.where(id: ids)
   end
@@ -59,6 +50,7 @@ class AdminController < ApplicationsController
     if app.pets.all? { |pet| pet.approved?(app) }
       app.status = :accepted
       app.save
+      app.pets.update(adoptable: false)
     else
       flash[:pet_error] = "One or more pets can't be Approved"
       redirect_to admin_application_show_path(app)
@@ -75,5 +67,17 @@ class AdminController < ApplicationsController
     app.status = :rejected
     app.save
     redirect_to admin_application_show_path(app)
+  end
+
+  private
+
+  def get_adopted_pets(shelter)
+    adopted = []
+    shelter.pets.each do |pet|
+      if pet.applications.any?{ |a| a.status == 'accepted'}
+        adopted << pet
+      end
+    end
+    adopted
   end
 end

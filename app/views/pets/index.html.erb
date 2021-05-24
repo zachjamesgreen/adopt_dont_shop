@@ -1,6 +1,7 @@
-<h1>All Pets</h1>
+
 
 <div class="columns small-12">
+  <h1>All Pets</h1>
   <%= link_to 'Start an Application', applications_new_path %>
   <%= form_with url: "/pets", method: :get, local: true do |f| %>
     <%= f.label :search %>

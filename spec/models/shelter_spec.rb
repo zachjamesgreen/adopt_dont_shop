@@ -44,7 +44,7 @@ RSpec.describe Shelter, type: :model do
 
     describe '#all_rev_alpha' do
       it 'orders shelters by name, descending' do
-        expect(Shelter.order_by_number_of_pets).to eq([@shelter_1, @shelter_3, @shelter_2])
+        expect(Shelter.all_rev_alpha).to eq([@shelter_2, @shelter_3, @shelter_1])
       end
     end
 
@@ -58,6 +58,16 @@ RSpec.describe Shelter, type: :model do
         expect { shelter.rank }.to raise_error(ActiveModel::MissingAttributeError)
       end
 
+    end
+    describe "#with_pending_apps" do
+      it 'should only give shelters with pending apps' do
+        app = Application.new attributes_for(:application)
+        app.pets << @pet_1
+        app.status = :pending
+        app.save!
+        result = Shelter.with_pending_apps
+        expect(result).to eq [@shelter_1]
+      end
     end
   end
 

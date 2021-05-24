@@ -9,6 +9,17 @@ RSpec.describe 'Admin Features' do
     @shelters = [@shelter_1,@shelter_2,@shelter_3]
   end
 
+  it 'should show all apps' do
+    app1 = Application.create! attributes_for(:application)
+    app2 = Application.create! attributes_for(:application)
+    app3 = Application.create! attributes_for(:application)
+    apps = [app1, app2, app3]
+    visit '/admin/applications'
+    apps.each do |app|
+      expect(page).to have_content app.name
+    end
+  end
+
   it 'should show all shelters in alpha desc' do
     visit '/admin/shelters'
     sorted_shelters = @shelters.sort_by(&:name)
@@ -93,6 +104,27 @@ RSpec.describe 'Admin Features' do
     expect(page).to have_current_path "/admin/applications/#{app.id}"
     expect(page).to have_no_link 'Approve all pets', href: "/admin/applications/#{app.id}/approve_pets"
     expect(page).to have_content 'Status: accepted'
+  end
+
+  it 'should show error if a pet cant be approved' do
+    app1 = Application.create! attributes_for(:application)
+    app2 = Application.create! attributes_for(:application)
+    3.times do |i|
+      pet = @shelter_1.pets.create! attributes_for(:pet)
+      app1.pets << pet
+      if i == 0
+        app2.pets << pet
+        app2.status = :pending
+        app2.save!
+        visit "/admin/applications/#{app2.id}"
+        click_link 'Approve all pets'
+      end
+    end
+    app1.status = :pending
+    app1.save!
+    visit "/admin/applications/#{app1.id}"
+    click_link 'Approve all pets'
+    expect(page).to have_content "One or more pets can't be Approved"
   end
 
   it 'should be accepted if all pets are approved (one by one)' do
@@ -196,14 +228,14 @@ RSpec.describe 'Admin Features' do
     end
   end
 
-  it 'should show avreage age of pets' do
-    pet1 = @shelter_1.pets.create! attributes_for(:pet)
-    pet2 = @shelter_1.pets.create! attributes_for(:pet)
+  it 'should show avereage age of pets' do
+    @shelter_1.pets.create! attributes_for(:pet)
+    @shelter_1.pets.create! attributes_for(:pet)
     pet3 = @shelter_1.pets.create! attributes_for(:pet)
     pet3.adoptable = false
     pet3.save!
     visit "/admin/shelters/#{@shelter_1.id}"
-    adoptable = @shelter_1.pets.where(adoptable: true).size
+    adoptable = @shelter_1.pets.adoptable.size
     within '#stats' do
       expect(page).to have_content "Adoptable pets: #{adoptable}"
     end
@@ -233,7 +265,6 @@ RSpec.describe 'Admin Features' do
     app.save!
 
     visit "/admin/shelters/#{@shelter_1.id}"
-    print page.html
     within '#action-required' do
       expect(page).to have_content 'Action Required'
       expect(page).to have_content pet.name

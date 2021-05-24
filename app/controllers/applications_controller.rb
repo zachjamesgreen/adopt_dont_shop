@@ -20,7 +20,6 @@ class ApplicationsController < ApplicationController
   def show
     @application = Application.find(params[:id])
     @pets = @application.pets
-    # @found_pets = Pet.search(params[:term]).get_pets_not_on_app(@application)
     @found_pets = @application.get_pets_not_on_app.where("name ILIKE ?", "%#{params[:term]}%") if params[:term]
   end
 
@@ -28,10 +27,9 @@ class ApplicationsController < ApplicationController
     app = Application.find params[:id]
 
     if params[:pet_id]
-      if app.pets << Pet.find(params[:pet_id])
-        redirect_to applications_show_path(app)
-        return
-      end
+      app.pets << Pet.find(params[:pet_id])
+      redirect_to applications_show_path(app)
+      return
     end
 
     if params[:desc]
@@ -39,7 +37,6 @@ class ApplicationsController < ApplicationController
       app.status = 'pending'
       app.save!
       redirect_to applications_show_path(app)
-      return
     end
   end
 

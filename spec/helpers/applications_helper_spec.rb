@@ -11,5 +11,13 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe ApplicationsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it 'should return enum type as array' do
+    expected = [
+      ["In progress", "in_progress"],
+      ["Pending", "pending"],
+      ["Accepted", "accepted"],
+      ["Rejected", "rejected"]
+    ]
+    expect(helper.get_statuses).to eq expected
+  end
 end
