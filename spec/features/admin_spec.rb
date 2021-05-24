@@ -57,4 +57,21 @@ RSpec.describe 'Admin Features' do
     expect(page).to have_no_link 'Reject'
     expect(page).to have_content 'X Rejected'
   end
+
+  it 'should decision on one app_pet does not affect other app with same pet' do
+    approve = Application.create! attributes_for(:application)
+    app = Application.create! attributes_for(:application)
+    pet = @shelter_1.pets.create attributes_for(:pet)
+    approve.pets << pet
+    approve.status = :pending
+    approve.save!
+    app.pets << pet
+    app.status = :pending
+    app.save!
+    visit "/admin/applications/#{approve.id}"
+    click_on 'Approve'
+    visit "/admin/applications/#{app.id}"
+    expect(page).to have_link 'Approve', href: "/admin/applications/#{app.id}/approve_pet/#{pet.id}"
+    expect(page).to have_link 'Reject', href: "/admin/applications/#{app.id}/reject_pet/#{pet.id}"
+  end
 end

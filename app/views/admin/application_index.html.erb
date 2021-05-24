@@ -1,0 +1,11 @@
+<%= render 'admin_header' %>
+
+<div class="columns small-12">
+  <h2>Admin Application Index</h2>
+</div>
+<div class="columns small-3">
+  <% @applications.each do |a| %>
+    <%= render 'partials/application_card', application_card: a %>
+    <hr>
+  <% end %>
+</div>

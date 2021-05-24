@@ -13,8 +13,6 @@
 
   <body>
 
-
-
     <div class="row">
       <% flash.each do |type, msg| %>
         <div data-alert class="callout alert">
@@ -24,16 +22,16 @@
         </div>
       <% end %>
 
-
       <ul class="menu">
         <li><%= link_to "Pets", "/pets" %></li>
         <li><%= link_to "Shelters", "/shelters" %></li>
         <li><%= link_to "Veterinarians", "/veterinarians" %></li>
         <li><%= link_to "Veterinary Offices", "/veterinary_offices" %></li>
+        <li><%= link_to "Applications", "/applications" %></li>
       </ul>
 
       <%= yield %>
-    </div>
 
+    </div>
   </body>
 </html>

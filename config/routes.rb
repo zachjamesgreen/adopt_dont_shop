@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   get '/veterinary_offices/:veterinary_office_id/veterinarians/new', to: 'veterinarians#new'
   post '/veterinary_offices/:veterinary_office_id/veterinarians', to: 'veterinarians#create'
 
+  get '/applications', to: 'applications#index'
   get '/applications/new', to: 'applications#new'
   post '/applications', to: 'applications#create'
   get '/applications/:id', to: 'applications#show', as: 'applications_show'
@@ -45,9 +46,12 @@ Rails.application.routes.draw do
   patch '/applications/:id', to: 'applications#update'
 
   scope 'admin' do
+    get '/', to: 'admin#index'
     get '/shelters', to: 'admin#shelter_index'
+    get '/applications', to: 'admin#application_index'
     get '/applications/:id', to: 'admin#application_show', as: 'admin_application_show'
     get '/applications/:id/approve_pet/:pet_id', to: 'admin#approve_pet'
     get '/applications/:id/reject_pet/:pet_id', to: 'admin#reject_pet'
+    get '/admin/applications/:id/approve_pets', to: 'admin#approve_pets'
   end
 end
