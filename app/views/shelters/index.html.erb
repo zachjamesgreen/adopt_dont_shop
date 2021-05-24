@@ -11,12 +11,5 @@
 </div>
 
 <% @shelters.each do |shelter| %>
-  <div class="card columns small-2">
-    <div id="shelter-<%= shelter.id %>">
-      <h3><%= shelter.name %></h3>
-      <p>Created at: <%= shelter.created_at %></p>
-      <%= link_to "Update #{shelter.name}", "/shelters/#{shelter.id}/edit" %>
-      <%= link_to "Delete #{shelter.name}", "/shelters/#{shelter.id}", method: :delete %>
-    </div>
-  </div>
+  <%= render 'partials/shelter_card', shelter_card: shelter %>
 <% end %>

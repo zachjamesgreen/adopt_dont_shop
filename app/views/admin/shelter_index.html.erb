@@ -1,11 +1,20 @@
-<div class="columns small-12">
-  <h1>Admin Page</h1>
-</div>
+<%= render 'admin_header' %>
 
 <div class="columns small-12">
-  <ul>
-    <% @shelters.each do |s| %>
-      <li><%= s.name %></li>
-    <% end %>
-  </ul>
+  <h1>Admin Shelters</h1>
 </div>
+
+<% @shelters.each do |shelter| %>
+  <%= render 'partials/shelter_card', shelter_card: shelter %>
+<% end %>
+
+<% if @shelters_pending && !@shelters_pending.empty? %>
+  <div class="columns small-12" id="shelters_pending_pets">
+    <h3>Shelters with pending applications</h3>
+    <ul>
+      <% @shelters_pending.each do |s| %>
+        <li><%= link_to s.name, shelter_show_path(s) %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

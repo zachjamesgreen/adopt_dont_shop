@@ -1,3 +1,5 @@
+<%= render 'admin_header' %>
+
 <div class="columns small-12">
   <h1>Admin Application Show</h1>
 </div>
@@ -8,27 +10,36 @@
   <p>City: <%= @application.city %></p>
   <p>State: <%= @application.state %></p>
   <p>Zip Code: <%= @application.zip_code %></p>
-  <p>Reason: <%= @application.desc %></p>
+  <p>Reason: <%= @application.desc %>
+  <p>Status: <%= @application.status %></p>
 </div>
 
-<div class="columns small-12">
-  <h3>Pets: </h3>
-  <ul>
-    <% @application.pets.each do |p| %>
-      <% approved = p.approved(@application) %>
-      <li>
-        <%= p.name %>
-        <% if approved == true %>
-          <p>✅ Approved</p>
-        <% elsif approved == false %>
-          <p style="color: red">X Rejected</p>
-        <% else %>
-          <%= link_to 'Approve', "/admin/applications/#{@application.id}/approve_pet/#{p.id}" %>
-          <%= link_to 'Reject', "/admin/applications/#{@application.id}/reject_pet/#{p.id}" %>
-        <% end %>
-      </li>
+<% unless @application.pets.empty? %>
+
+  <div class="columns small-12">
+
+    <% unless @application.accepted? %>
+      <%= link_to 'Approve all pets', "/admin/applications/#{@application.id}/approve_pets" %>
     <% end %>
-  </ul>
-</div>
+
+    <h3>Pets: </h3>
+    <ul>
+      <% @application.pets.each do |p| %>
+        <% approved = p.approved?(@application) %>
+        <li id="pet-<%= p.id %>">
+          <%= p.name %>
+          <% if approved == true %>
+            <p>✅ Approved</p>
+          <% elsif approved == false %>
+            <p style="color: red">X Rejected</p>
+          <% else %>
+            <%= link_to 'Approve', "/admin/applications/#{@application.id}/approve_pet/#{p.id}" %>
+            <%= link_to 'Reject', "/admin/applications/#{@application.id}/reject_pet/#{p.id}" %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
 

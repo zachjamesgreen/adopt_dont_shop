@@ -16,20 +16,19 @@ RSpec.describe 'Admin Features' do
     expect(sorted_shelters[1].name).to appear_before(sorted_shelters[0].name)
   end
 
-  xit 'should see section of shelters with pending applications' do
-    app1 = Application.create! attributes_for(:application)
-    app2 = Application.create! attributes_for(:application)
-    pet1 = @shelter_1.pets.create attributes_for(:pet)
-    pet2 = @shelter_1.pets.create attributes_for(:pet)
-    app1.pets << pet1
-    app2.pets << pet2
-    app1.status = :pending
-    app2.status = :pending
+  it 'should see section of shelters with pending applications' do
+    app = Application.create! attributes_for(:application)
+    pet = @shelter_1.pets.create attributes_for(:pet)
+    app.pets << pet
+    app.status = :pending
+    app.save!
     visit '/admin/shelters'
-    expect(page).to have_content "Shelter's with Pending Applications"
+    expect(page).to have_content "Shelters with pending applications"
+    expect(page).to have_content @shelter_1.name
+    expect(page).to have_content @shelter_2.name
+    expect(page).to have_content @shelter_3.name
     within '#shelters_pending_pets' do
       expect(page).to have_content @shelter_1.name
-      expect(page).to have_content @shelter_2.name
     end
   end
 
@@ -38,10 +37,72 @@ RSpec.describe 'Admin Features' do
     pet1 = @shelter_1.pets.create attributes_for(:pet)
     app1.pets << pet1
     app1.status = :pending
+    app1.save!
     visit "/admin/applications/#{app1.id}"
     expect(page).to have_link 'Approve', href: "/admin/applications/#{app1.id}/approve_pet/#{pet1.id}"
     click_on 'Approve'
     expect(page).to have_no_link 'Approve'
     expect(page).to have_content '✅ Approved'
+  end
+
+  it 'should reject pet on application' do
+    app1 = Application.create! attributes_for(:application)
+    pet1 = @shelter_1.pets.create attributes_for(:pet)
+    app1.pets << pet1
+    app1.status = :pending
+    app1.save!
+    visit "/admin/applications/#{app1.id}"
+    expect(page).to have_link 'Reject', href: "/admin/applications/#{app1.id}/reject_pet/#{pet1.id}"
+    click_on 'Reject'
+    expect(page).to have_no_link 'Reject'
+    expect(page).to have_content 'X Rejected'
+  end
+
+  it 'should decision on one app_pet does not affect other app with same pet' do
+    approve = Application.create! attributes_for(:application)
+    app = Application.create! attributes_for(:application)
+    pet = @shelter_1.pets.create attributes_for(:pet)
+    approve.pets << pet
+    approve.status = :pending
+    approve.save!
+    app.pets << pet
+    app.status = :pending
+    app.save!
+    visit "/admin/applications/#{approve.id}"
+    click_on 'Approve'
+    visit "/admin/applications/#{app.id}"
+    expect(page).to have_link 'Approve', href: "/admin/applications/#{app.id}/approve_pet/#{pet.id}"
+    expect(page).to have_link 'Reject', href: "/admin/applications/#{app.id}/reject_pet/#{pet.id}"
+  end
+
+  it 'should be accepted if all pets are approved (all at once)' do
+    app = Application.create! attributes_for(:application)
+    3.times do
+      pet = @shelter_1.pets.create! attributes_for(:pet)
+      app.pets << pet
+    end
+    app.status = :pending
+    app.save!
+    visit "/admin/applications/#{app.id}"
+    expect(page).to have_link 'Approve all pets', href: "/admin/applications/#{app.id}/approve_pets"
+    click_link 'Approve all pets'
+    expect(page).to have_current_path "/admin/applications/#{app.id}"
+    expect(page).to have_no_link 'Approve all pets', href: "/admin/applications/#{app.id}/approve_pets"
+    expect(page).to have_content 'Status: accepted'
+  end
+
+  it 'should be accepted if all pets are approved (one by one)' do
+    app = Application.create! attributes_for(:application)
+    pet = @shelter_1.pets.create! attributes_for(:pet)
+    app.pets << pet
+    app.status = :pending
+    app.save!
+    visit "/admin/applications/#{app.id}"
+    within "#pet-#{pet.id}" do
+      click_on 'Approve'
+    end
+    expect(page).to have_current_path "/admin/applications/#{app.id}"
+    expect(page).to have_no_link 'Approve all pets', href: "/admin/applications/#{app.id}/approve_pets"
+    expect(page).to have_content 'Status: accepted'
   end
 end

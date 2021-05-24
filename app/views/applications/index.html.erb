@@ -1,0 +1,10 @@
+<div class="columns small-12">
+  <h1>Applications</h1>
+</div>
+
+<div class="columns small-3">
+  <% @applications.each do |a| %>
+    <%= render 'partials/application_card', application_card: a %>
+    <hr>
+  <% end %>
+</div>
