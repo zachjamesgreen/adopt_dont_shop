@@ -20,7 +20,7 @@ class ApplicationsController < ApplicationController
   def show
     @application = Application.find(params[:id])
     @pets = @application.pets
-    @found_pets = @application.get_pets_not_on_app.where("name ILIKE ?", "%#{params[:term]}%") if params[:term]
+    @found_pets = @application.get_pets_not_on_app.search(params[:term]) if params[:term]
   end
 
   def update
@@ -34,7 +34,7 @@ class ApplicationsController < ApplicationController
 
     if params[:desc]
       app.desc = params[:desc]
-      app.status = 'pending'
+      app.status = :pending
       app.save!
       redirect_to applications_show_path(app)
     end
