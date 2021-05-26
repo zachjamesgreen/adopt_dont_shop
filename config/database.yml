@@ -17,7 +17,7 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  host: <%= ENV['ASTRO_HOST'] %>
+#  host: <%#= ENV['ASTRO_HOST'] %>
   username: <%= ENV['ASTRO_USERNAME'] %>
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
@@ -84,5 +84,5 @@ test:
 production:
   <<: *default
   database: adopt_dont_shop_production
-  username: adopt_dont_shop
-  password: <%= ENV['ADOPT_DONT_SHOP_DATABASE_PASSWORD'] %>
+#  username: adopt_dont_shop
+#  password: <%#= ENV['ADOPT_DONT_SHOP_DATABASE_PASSWORD'] %>
