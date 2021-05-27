@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationsController < ApplicationController
   def index
     @applications = Application.all

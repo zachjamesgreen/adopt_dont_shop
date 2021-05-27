@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Application, type: :model do
@@ -34,7 +36,7 @@ RSpec.describe Application, type: :model do
 
   describe '#get_pets_not_on_app' do
     it 'gets all pets not on an application' do
-      app = Application.create! attributes_for(:application)
+      app = described_class.create! attributes_for(:application)
       app.pets << @pet_1
       expect(app.get_pets_not_on_app).to match_array([@pet_2, @pet_3])
     end
