@@ -33,6 +33,12 @@ class Shelter < ApplicationRecord
     joins(pets: :applications).where({applications: {status: :pending}}).group(:id).order(:name)
   end
 
+  # Returns pets that do not have a decision made for them on an application
+  def action_required
+    ids = ApplicationPet.distinct.select(:pet_id).where(pet_id: pets.ids, status: nil).pluck(:pet_id)
+    Pet.where(id: ids)
+  end
+
   def pet_count
     pets.count
   end

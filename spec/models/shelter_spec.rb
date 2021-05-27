@@ -95,5 +95,21 @@ RSpec.describe Shelter, type: :model do
         expect(@shelter_1.pet_count).to eq(3)
       end
     end
+
+    describe 'action_required' do
+      it 'should return pets that need action' do
+        shelter = Shelter.create! attributes_for(:shelter)
+        app = Application.create! attributes_for(:application)
+        pet1 = shelter.pets.create! attributes_for(:pet)
+        pet2 = shelter.pets.create! attributes_for(:pet)
+        app.pets << [pet1, pet2]
+        ap = ApplicationPet.find_by(application_id: app.id, pet_id: pet1.id)
+        ap.status = true
+        ap.save!
+
+        expected = shelter.action_required
+        expect(expected).to eq [pet2]
+      end
+    end
   end
 end

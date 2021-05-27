@@ -14,8 +14,7 @@ class AdminController < ApplicationController
     @average_age = s.pets.average(:age)
     @adoptable = s.pets.adoptable.size
     @adopted = get_adopted_pets(s)
-    ids = ApplicationPet.distinct.select(:pet_id).where(pet_id: s.pets.ids, status: nil).pluck(:pet_id)
-    @action_required_pets = Pet.where(id: ids)
+    @action_required_pets = s.action_required
   end
 
   def application_index
@@ -28,7 +27,9 @@ class AdminController < ApplicationController
 
   def approve_pet
     app = Application.find params[:id]
-    pet = Pet.find params[:pet_id]
+    # pet = Pet.find params[:pet_id]
+    # or
+    pet = app.pets.find(params[:pet_id])
     ap = ApplicationPet.find_by(application_id: app.id, pet_id: pet.id)
     ap.status = true
     ap.save
@@ -47,6 +48,7 @@ class AdminController < ApplicationController
 
     app.pets.each do |pet|
       next unless pet.adoptable?
+
       ap = ApplicationPet.find_by(application_id: app.id, pet_id: pet.id)
       ap.status = true
       ap.save
