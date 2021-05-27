@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationPet < ApplicationRecord
   self.table_name = 'applications_pets'
   validates :application_id, uniqueness: { scope: :pet_id }

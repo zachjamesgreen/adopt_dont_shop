@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateNewApplicationsPets < ActiveRecord::Migration[5.2]
   def change
     create_table :applications_pets do |t|

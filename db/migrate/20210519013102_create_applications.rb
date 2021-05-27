@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateApplications < ActiveRecord::Migration[5.2]
   def up
     create_enum :application_status, %w[in_progress pending accepted rejected]
