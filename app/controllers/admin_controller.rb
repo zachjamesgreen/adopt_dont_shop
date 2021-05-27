@@ -59,9 +59,6 @@ class AdminController < ApplicationController
       app.status = :accepted
       app.save
       app.pets.update(adoptable: false)
-      # app.pets.each do |pet|
-      #   pet.remove_pet_from_apps(app)
-      # end
     else
       flash[:pet_error] = "One or more pets can't be Approved"
       redirect_to admin_application_show_path(app)
