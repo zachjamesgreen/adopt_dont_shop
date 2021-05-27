@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Veterinarian, type: :model do
@@ -22,13 +24,13 @@ RSpec.describe Veterinarian, type: :model do
   describe 'class methods' do
     describe '#search' do
       it 'returns partial matches' do
-        expect(Veterinarian.search('Ta')).to eq([@vet_1, @vet_2])
+        expect(described_class.search('Ta')).to eq([@vet_1, @vet_2])
       end
     end
 
     describe '#on_call' do
       it 'returns on call veterinarians' do
-        expect(Veterinarian.on_call).to eq([@vet_1, @vet_2, @vet_3])
+        expect(described_class.on_call).to eq([@vet_1, @vet_2, @vet_3])
       end
     end
   end

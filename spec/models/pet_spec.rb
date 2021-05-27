@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Pet, type: :model do
@@ -21,13 +23,13 @@ RSpec.describe Pet, type: :model do
   describe 'class methods' do
     describe '#search' do
       it 'returns partial matches' do
-        expect(Pet.search('Claw')).to eq([@pet_2])
+        expect(described_class.search('Claw')).to eq([@pet_2])
       end
     end
 
     describe '#adoptable' do
       it 'returns adoptable pets' do
-        expect(Pet.adoptable).to eq([@pet_1, @pet_2])
+        expect(described_class.adoptable).to eq([@pet_1, @pet_2])
       end
     end
   end

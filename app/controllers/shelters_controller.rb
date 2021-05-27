@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SheltersController < ApplicationController
   def index
     @shelters = if params[:sort].present? && params[:sort] == 'pet_count'
