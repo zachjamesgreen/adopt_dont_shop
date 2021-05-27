@@ -1,5 +1,6 @@
-class AdminController < ApplicationController
+# frozen_string_literal: true
 
+class AdminController < ApplicationController
   def index; end
 
   def shelter_index
@@ -14,8 +15,7 @@ class AdminController < ApplicationController
     @average_age = s.pets.average(:age)
     @adoptable = s.pets.adoptable.size
     @adopted = get_adopted_pets(s)
-    ids = ApplicationPet.distinct.select(:pet_id).where(pet_id: s.pets.ids, status: nil).pluck(:pet_id)
-    @action_required_pets = Pet.where(id: ids)
+    @action_required_pets = s.action_required
   end
 
   def application_index
@@ -28,7 +28,9 @@ class AdminController < ApplicationController
 
   def approve_pet
     app = Application.find params[:id]
-    pet = Pet.find params[:pet_id]
+    # pet = Pet.find params[:pet_id]
+    # or
+    pet = app.pets.find(params[:pet_id])
     ap = ApplicationPet.find_by(application_id: app.id, pet_id: pet.id)
     ap.status = true
     ap.save
@@ -47,6 +49,7 @@ class AdminController < ApplicationController
 
     app.pets.each do |pet|
       next unless pet.adoptable?
+
       ap = ApplicationPet.find_by(application_id: app.id, pet_id: pet.id)
       ap.status = true
       ap.save
@@ -56,9 +59,6 @@ class AdminController < ApplicationController
       app.status = :accepted
       app.save
       app.pets.update(adoptable: false)
-      # app.pets.each do |pet|
-      #   pet.remove_pet_from_apps(app)
-      # end
     else
       flash[:pet_error] = "One or more pets can't be Approved"
       redirect_to admin_application_show_path(app)
@@ -84,7 +84,7 @@ class AdminController < ApplicationController
   # A pet is adopted if it is apart of an accepted application
   def get_adopted_pets(shelter)
     shelter.pets.map do |pet|
-      pet if pet.applications.any?{ |a| a.status == 'accepted'}
+      pet if pet.applications.any? { |a| a.status == 'accepted' }
     end
   end
 end

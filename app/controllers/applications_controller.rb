@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationsController < ApplicationController
   def index
     @applications = Application.all
@@ -10,7 +12,7 @@ class ApplicationsController < ApplicationController
   def create
     @application = Application.new(application_params)
     if @application.save
-      redirect_to applications_show_path(@application), notice: "Application saved"
+      redirect_to applications_show_path(@application), notice: 'Application saved'
     else
       flash.now[:application_error] = @application.errors.full_messages
       render :new

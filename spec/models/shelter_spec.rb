@@ -1,21 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Shelter, type: :model do
-  describe 'relationships' do
-    it { should have_many(:pets) }
-  end
-
-  describe 'validations' do
-    it { should validate_presence_of(:name) }
-    it { should validate_presence_of(:city) }
-    it { should validate_presence_of(:rank) }
-    it { should validate_numericality_of(:rank) }
-  end
-
-  before(:each) do
-    @shelter_1 = Shelter.create(name: 'Aurora shelter', city: 'Aurora, CO', foster_program: false, rank: 9)
-    @shelter_2 = Shelter.create(name: 'RGV animal shelter', city: 'Harlingen, TX', foster_program: false, rank: 5)
-    @shelter_3 = Shelter.create(name: 'Fancy pets of Colorado', city: 'Denver, CO', foster_program: true, rank: 10)
+  before do
+    @shelter_1 = described_class.create(name: 'Aurora shelter', city: 'Aurora, CO', foster_program: false, rank: 9)
+    @shelter_2 = described_class.create(name: 'RGV animal shelter', city: 'Harlingen, TX', foster_program: false,
+                                        rank: 5)
+    @shelter_3 = described_class.create(name: 'Fancy pets of Colorado', city: 'Denver, CO', foster_program: true,
+                                        rank: 10)
 
     @pet_1 = @shelter_1.pets.create(name: 'Mr. Pirate', breed: 'tuxedo shorthair', age: 5, adoptable: false)
     @pet_2 = @shelter_1.pets.create(name: 'Clawdia', breed: 'shorthair', age: 3, adoptable: true)
@@ -23,49 +16,60 @@ RSpec.describe Shelter, type: :model do
     @pet_4 = @shelter_1.pets.create(name: 'Ann', breed: 'ragdoll', age: 5, adoptable: true)
   end
 
+  describe 'relationships' do
+    it { is_expected.to have_many(:pets) }
+  end
+
+  describe 'validations' do
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_presence_of(:city) }
+    it { is_expected.to validate_presence_of(:rank) }
+    it { is_expected.to validate_numericality_of(:rank) }
+  end
+
   describe 'class methods' do
     describe '#search' do
       it 'returns partial matches' do
-        expect(Shelter.search("Fancy")).to eq([@shelter_3])
+        expect(described_class.search('Fancy')).to eq([@shelter_3])
       end
     end
 
     describe '#order_by_recently_created' do
       it 'returns shelters with the most recently created first' do
-        expect(Shelter.order_by_recently_created).to eq([@shelter_3, @shelter_2, @shelter_1])
+        expect(described_class.order_by_recently_created).to eq([@shelter_3, @shelter_2, @shelter_1])
       end
     end
 
     describe '#order_by_number_of_pets' do
       it 'orders the shelters by number of pets they have, descending' do
-        expect(Shelter.order_by_number_of_pets).to eq([@shelter_1, @shelter_3, @shelter_2])
+        expect(described_class.order_by_number_of_pets).to eq([@shelter_1, @shelter_3, @shelter_2])
       end
     end
 
     describe '#all_rev_alpha' do
       it 'orders shelters by name, descending' do
-        expect(Shelter.all_rev_alpha).to eq([@shelter_2, @shelter_3, @shelter_1])
+        expect(described_class.all_rev_alpha).to eq([@shelter_2, @shelter_3, @shelter_1])
       end
     end
 
     describe '#admin_show_info' do
-      it 'should only have name and city' do
-        shelter = Shelter.admin_show_info(@shelter_1.id)
+      it 'only has name and city' do
+        shelter = described_class.admin_show_info(@shelter_1.id)
         expect(shelter.name).to eq 'Aurora shelter'
         expect(shelter.city).to eq 'Aurora, CO'
         expect(shelter.id).to be_nil
         expect { shelter.foster_program }.to raise_error(ActiveModel::MissingAttributeError)
         expect { shelter.rank }.to raise_error(ActiveModel::MissingAttributeError)
       end
-
     end
-    describe "#with_pending_apps" do
-      it 'should only give shelters with pending apps' do
+
+    describe '#with_pending_apps' do
+      it 'only gives shelters with pending apps' do
         app = Application.new attributes_for(:application)
         app.pets << @pet_1
         app.status = :pending
         app.save!
-        result = Shelter.with_pending_apps
+        result = described_class.with_pending_apps
         expect(result).to eq [@shelter_1]
       end
     end
@@ -93,6 +97,22 @@ RSpec.describe Shelter, type: :model do
     describe '.pet_count' do
       it 'returns the number of pets at the given shelter' do
         expect(@shelter_1.pet_count).to eq(3)
+      end
+    end
+
+    describe 'action_required' do
+      it 'returns pets that need action' do
+        shelter = described_class.create! attributes_for(:shelter)
+        app = Application.create! attributes_for(:application)
+        pet1 = shelter.pets.create! attributes_for(:pet)
+        pet2 = shelter.pets.create! attributes_for(:pet)
+        app.pets << [pet1, pet2]
+        ap = ApplicationPet.find_by(application_id: app.id, pet_id: pet1.id)
+        ap.status = true
+        ap.save!
+
+        expected = shelter.action_required
+        expect(expected).to eq [pet2]
       end
     end
   end

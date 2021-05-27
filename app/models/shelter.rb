@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Shelter < ApplicationRecord
   validates :name, presence: true
   validates :rank, presence: true, numericality: true
@@ -10,10 +12,10 @@ class Shelter < ApplicationRecord
   end
 
   def self.order_by_number_of_pets
-    select("shelters.*, count(pets.id) AS pets_count")
-      .joins("LEFT OUTER JOIN pets ON pets.shelter_id = shelters.id")
-      .group("shelters.id")
-      .order("pets_count DESC")
+    select('shelters.*, count(pets.id) AS pets_count')
+      .joins('LEFT OUTER JOIN pets ON pets.shelter_id = shelters.id')
+      .group('shelters.id')
+      .order('pets_count DESC')
   end
 
   # Returns all shelters and order by name descending
@@ -30,7 +32,13 @@ class Shelter < ApplicationRecord
   # Return all the shelters
   # that have an associating pending application order by name
   def self.with_pending_apps
-    joins(pets: :applications).where({applications: {status: :pending}}).group(:id).order(:name)
+    joins(pets: :applications).where({ applications: { status: :pending } }).group(:id).order(:name)
+  end
+
+  # Returns pets that do not have a decision made for them on an application
+  def action_required
+    ids = ApplicationPet.distinct.select(:pet_id).where(pet_id: pets.ids, status: nil).pluck(:pet_id)
+    Pet.where(id: ids)
   end
 
   def pet_count

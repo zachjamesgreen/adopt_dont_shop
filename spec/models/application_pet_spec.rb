@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ApplicationPet, type: :model do
   describe 'relationships' do
-    it { should belong_to(:pet) }
-    it { should belong_to(:application) }
+    it { is_expected.to belong_to(:pet) }
+    it { is_expected.to belong_to(:application) }
   end
 end
