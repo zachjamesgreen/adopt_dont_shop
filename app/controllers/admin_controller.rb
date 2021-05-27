@@ -1,5 +1,4 @@
 class AdminController < ApplicationController
-
   def index; end
 
   def shelter_index
@@ -86,7 +85,7 @@ class AdminController < ApplicationController
   # A pet is adopted if it is apart of an accepted application
   def get_adopted_pets(shelter)
     shelter.pets.map do |pet|
-      pet if pet.applications.any?{ |a| a.status == 'accepted'}
+      pet if pet.applications.any? { |a| a.status == 'accepted' }
     end
   end
 end

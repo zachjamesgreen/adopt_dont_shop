@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'application creation' do
-  it 'should see start application link' do
+  it 'sees start application link' do
     visit '/pets'
     expect(page).to have_link 'Start an Application', href: '/applications/new'
   end
@@ -18,7 +18,7 @@ RSpec.describe 'application creation' do
     expect(find('form')).to have_content('Status')
   end
 
-  it 'should be able to fill out and submit form' do
+  it 'is able to fill out and submit form' do
     visit '/applications/new'
     fill_in 'Name', with: 'Zach'
     fill_in 'Street', with: 'Zach'
@@ -28,15 +28,15 @@ RSpec.describe 'application creation' do
     click_button 'commit'
     app = Application.last
     expect(page).to have_current_path "/applications/#{app.id}"
-    expect(page).to have_content "Name: Zach"
-    expect(page).to have_content "Street: Zach"
-    expect(page).to have_content "City: Zach"
-    expect(page).to have_content "State: Zach"
-    expect(page).to have_content "Zip Code: Zach"
-    expect(page).to have_content "Status: In progress"
+    expect(page).to have_content 'Name: Zach'
+    expect(page).to have_content 'Street: Zach'
+    expect(page).to have_content 'City: Zach'
+    expect(page).to have_content 'State: Zach'
+    expect(page).to have_content 'Zip Code: Zach'
+    expect(page).to have_content 'Status: In progress'
   end
 
-  it 'should fail to save form and show a message when all fields are not complete' do
+  it 'fails to save form and show a message when all fields are not complete' do
     app = Application.create attributes_for(:application)
     visit '/applications/new'
     fill_in 'Name', with: 'Zach'
@@ -55,7 +55,7 @@ RSpec.describe 'application creation' do
     expect(Application.last).to eq app
   end
 
-  it 'should add pet to application' do
+  it 'adds pet to application' do
     shelter = Shelter.create! attributes_for(:shelter)
     pet = Pet.new attributes_for(:pet)
     pet.shelter = shelter
@@ -71,10 +71,9 @@ RSpec.describe 'application creation' do
     click_link 'Adopt this Pet'
     expect(page).to have_current_path "/applications/#{app.id}"
     expect(page).to have_content pet.name
-
   end
 
-  it 'should submit the application' do
+  it 'submits the application' do
     shelter = Shelter.create! attributes_for(:shelter)
     app = Application.create! attributes_for(:application)
     pet = Pet.new attributes_for(:pet)
@@ -92,10 +91,10 @@ RSpec.describe 'application creation' do
     expect(page).to have_content pet.name
     expect(page).to have_no_content 'Add a Pet to this Application'
     expect(page).to have_no_selector :css, '#pet_search_form'
-    expect(page).to have_content "Status: Pending"
+    expect(page).to have_content 'Status: Pending'
   end
 
-  it 'should not have submit button if no pets' do
+  it 'does not have submit button if no pets' do
     app = Application.create! attributes_for(:application)
     visit "/applications/#{app.id}"
     expect(page).to have_no_content 'Why are you good for this/these pet(s)?'

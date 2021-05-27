@@ -24,7 +24,7 @@ RSpec.describe 'the veterinarians index' do
 
     visit '/veterinarians'
 
-    expect(page).to_not have_content(vet_1.name)
+    expect(page).not_to have_content(vet_1.name)
   end
 
   it 'displays a link to edit each veterinarian' do
@@ -54,7 +54,7 @@ RSpec.describe 'the veterinarians index' do
 
     click_link("Delete #{vet_1.name}")
 
-    expect(page).to have_current_path("/veterinarians")
-    expect(page).to_not have_content(vet_1.name)
+    expect(page).to have_current_path('/veterinarians')
+    expect(page).not_to have_content(vet_1.name)
   end
 end

@@ -1,7 +1,6 @@
 class CreateApplications < ActiveRecord::Migration[5.2]
-
   def up
-    create_enum :application_status, %w(in_progress pending accepted rejected)
+    create_enum :application_status, %w[in_progress pending accepted rejected]
     create_table :applications do |t|
       t.string :name
       t.string :street

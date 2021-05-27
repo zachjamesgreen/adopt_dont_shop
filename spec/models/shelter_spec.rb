@@ -1,18 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Shelter, type: :model do
-  describe 'relationships' do
-    it { should have_many(:pets) }
-  end
-
-  describe 'validations' do
-    it { should validate_presence_of(:name) }
-    it { should validate_presence_of(:city) }
-    it { should validate_presence_of(:rank) }
-    it { should validate_numericality_of(:rank) }
-  end
-
-  before(:each) do
+  before do
     @shelter_1 = Shelter.create(name: 'Aurora shelter', city: 'Aurora, CO', foster_program: false, rank: 9)
     @shelter_2 = Shelter.create(name: 'RGV animal shelter', city: 'Harlingen, TX', foster_program: false, rank: 5)
     @shelter_3 = Shelter.create(name: 'Fancy pets of Colorado', city: 'Denver, CO', foster_program: true, rank: 10)
@@ -23,10 +12,21 @@ RSpec.describe Shelter, type: :model do
     @pet_4 = @shelter_1.pets.create(name: 'Ann', breed: 'ragdoll', age: 5, adoptable: true)
   end
 
+  describe 'relationships' do
+    it { is_expected.to have_many(:pets) }
+  end
+
+  describe 'validations' do
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_presence_of(:city) }
+    it { is_expected.to validate_presence_of(:rank) }
+    it { is_expected.to validate_numericality_of(:rank) }
+  end
+
   describe 'class methods' do
     describe '#search' do
       it 'returns partial matches' do
-        expect(Shelter.search("Fancy")).to eq([@shelter_3])
+        expect(Shelter.search('Fancy')).to eq([@shelter_3])
       end
     end
 
@@ -49,7 +49,7 @@ RSpec.describe Shelter, type: :model do
     end
 
     describe '#admin_show_info' do
-      it 'should only have name and city' do
+      it 'only has name and city' do
         shelter = Shelter.admin_show_info(@shelter_1.id)
         expect(shelter.name).to eq 'Aurora shelter'
         expect(shelter.city).to eq 'Aurora, CO'
@@ -57,10 +57,10 @@ RSpec.describe Shelter, type: :model do
         expect { shelter.foster_program }.to raise_error(ActiveModel::MissingAttributeError)
         expect { shelter.rank }.to raise_error(ActiveModel::MissingAttributeError)
       end
-
     end
-    describe "#with_pending_apps" do
-      it 'should only give shelters with pending apps' do
+
+    describe '#with_pending_apps' do
+      it 'only gives shelters with pending apps' do
         app = Application.new attributes_for(:application)
         app.pets << @pet_1
         app.status = :pending
@@ -97,7 +97,7 @@ RSpec.describe Shelter, type: :model do
     end
 
     describe 'action_required' do
-      it 'should return pets that need action' do
+      it 'returns pets that need action' do
         shelter = Shelter.create! attributes_for(:shelter)
         app = Application.create! attributes_for(:application)
         pet1 = shelter.pets.create! attributes_for(:pet)
