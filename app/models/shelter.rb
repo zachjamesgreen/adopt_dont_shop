@@ -16,17 +16,19 @@ class Shelter < ApplicationRecord
       .order("pets_count DESC")
   end
 
-  # created by me
+  # Returns all shelters and order by name descending
   def self.all_rev_alpha
     find_by_sql('SELECT * FROM shelters ORDER BY name DESC')
   end
 
-  # created by me
+  # Return the name and city of a shelter and grab the first one
   def self.admin_show_info(id)
-    find_by_sql("SELECT name,city FROM shelters WHERE id = #{id} LIMIT 1")[0]
+    find_by_sql("SELECT name, city FROM shelters WHERE id = #{id}")[0]
   end
 
-  #created by me
+  # After joining pets and applications tables
+  # Return all the shelters
+  # that have an associating pending application order by name
   def self.with_pending_apps
     joins(pets: :applications).where({applications: {status: :pending}}).group(:id).order(:name)
   end
