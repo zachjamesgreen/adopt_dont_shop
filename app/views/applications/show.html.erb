@@ -26,7 +26,7 @@
 
 </div>
 
-<% unless @application.pending?|| @application.rejected? || @application.accepted? %>
+<% if @application.in_progress? %>
   <div class="columns small-6">
     <h5>Add a Pet to this Application</h5>
     <%= form_with url: "/applications/#{@application.id}", method: :get, local: true, id: 'pet_search_form' do |f| %>

@@ -28,34 +28,43 @@ class AdminController < ApplicationController
 
   def approve_pet
     app = Application.find params[:id]
-    ap = ApplicationPet.find_by(application_id: app.id, pet_id: params[:pet_id])
+    pet = Pet.find params[:pet_id]
+    ap = ApplicationPet.find_by(application_id: app.id, pet_id: pet.id)
     ap.status = true
     ap.save
+
     if app.pets.all? { |pet| pet.approved?(app) }
       app.status = :accepted
       app.save
       app.pets.update(adoptable: false)
+      # pet.remove_pet_from_apps(app)
     end
     redirect_to admin_application_show_path(app)
   end
 
   def approve_pets
     app = Application.find params[:id]
+
     app.pets.each do |pet|
       next unless pet.adoptable?
       ap = ApplicationPet.find_by(application_id: app.id, pet_id: pet.id)
       ap.status = true
       ap.save
     end
+
     if app.pets.all? { |pet| pet.approved?(app) }
       app.status = :accepted
       app.save
       app.pets.update(adoptable: false)
+      # app.pets.each do |pet|
+      #   pet.remove_pet_from_apps(app)
+      # end
     else
       flash[:pet_error] = "One or more pets can't be Approved"
       redirect_to admin_application_show_path(app)
       return
     end
+
     redirect_to admin_application_show_path(app)
   end
 
@@ -71,13 +80,11 @@ class AdminController < ApplicationController
 
   private
 
+  # Returns an array of pets that have been adopted for a given shelter
+  # A pet is adopted if it is apart of an accepted application
   def get_adopted_pets(shelter)
-    adopted = []
-    shelter.pets.each do |pet|
-      if pet.applications.any?{ |a| a.status == 'accepted'}
-        adopted << pet
-      end
+    shelter.pets.map do |pet|
+      pet if pet.applications.any?{ |a| a.status == 'accepted'}
     end
-    adopted
   end
 end
